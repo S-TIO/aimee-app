@@ -16,12 +16,13 @@ import Container from '../../layout/Container';
 import BannerCarousel from '../../views/Home/BannerCarousel';
 import HorizontalMenu from '../../views/Home/HorizontalMenu';
 
-const createVid = (id, title) => {
+const createVid = (id, title, description) => {
   return {
     id,
     title,
     cover: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
     link: `https://www.youtube.com/embed/${id}?rel=0&autoplay=0&showinfo=0&controls=1&fullscreen=1`,
+    description,
     type: 'VIDEO',
   };
 };
@@ -91,7 +92,7 @@ const POSTS = posts.map((post) => {
 });
 
 const SHARINGSANTAII = sharingSantaii.map((vid) => {
-  return createVid(vid.id, vid.title);
+  return createVid(vid.id, vid.title, vid.description);
 });
 
 const SECTIONS = [
