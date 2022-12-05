@@ -4,7 +4,7 @@ import { Text, useTheme } from 'react-native-paper';
 
 import Container from '../../layout/Container';
 
-const VideoDescription = ({ title, description }) => {
+const VideoDescription = ({ title, description, onOpen }) => {
   const { colors } = useTheme();
 
   return (
@@ -13,12 +13,12 @@ const VideoDescription = ({ title, description }) => {
         <Text style={styles.title}>{title}</Text>
       </View>
 
-      <View>
-        <Text ellipsizeMode="tail" numberOfLines={3}>
-          {description}
-        </Text>
+      <TouchableOpacity activeOpacity={0.6} onPress={onOpen}>
+        <View>
+          <Text ellipsizeMode="tail" numberOfLines={3}>
+            {description}
+          </Text>
 
-        <TouchableOpacity activeOpacity={0.6}>
           <Text
             style={[
               styles.readMore,
@@ -29,8 +29,8 @@ const VideoDescription = ({ title, description }) => {
           >
             Read more
           </Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
     </Container>
   );
 };
@@ -38,6 +38,7 @@ const VideoDescription = ({ title, description }) => {
 VideoDescription.propTypes = {
   title: propTypes.string.isRequired,
   description: propTypes.string.isRequired,
+  onOpen: propTypes.func,
 };
 
 export default VideoDescription;
