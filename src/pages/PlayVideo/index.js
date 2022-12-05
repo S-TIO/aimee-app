@@ -4,13 +4,14 @@ import {
 } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme, Text } from 'react-native-paper';
 
 import sharingSantaii from '../../_DATA/sharing-santaii.json';
 import Divider from '../../components/Divider';
 import SafeAreaView from '../../components/SafeAreaView';
 import VideoCardLoader from '../../components/VerticalCardLoader';
 import Container from '../../layout/Container';
+import DescriptionSheet from '../../views/PlayVideo/DescriptionSheet';
 import RecommendedVideo from '../../views/PlayVideo/RecommendedVideo';
 import VideoContainer from '../../views/PlayVideo/VideoContainer';
 import VideoDescription from '../../views/PlayVideo/VideoDescription';
@@ -34,6 +35,8 @@ const PlayVideo = ({ route, navigation }) => {
   const data = route.params.data;
   const { colors } = useTheme();
 
+  const [descriptionOpen, setDescriptionOpen] = useState(false);
+  const [videoHeight, setVideoHeight] = useState(0);
   const [videoLoaded, setVideoLoaded] = useState(false);
 
   const handleOnLoadEnd = () => setVideoLoaded(true);
@@ -59,7 +62,9 @@ const PlayVideo = ({ route, navigation }) => {
 
   return (
     <SafeAreaView>
-      <View>
+      <View
+        onLayout={(event) => setVideoHeight(event.nativeEvent.layout.height)}
+      >
         <VideoContainer source={data.link} onLoadEnd={handleOnLoadEnd} />
         {!videoLoaded && (
           <View
@@ -75,7 +80,13 @@ const PlayVideo = ({ route, navigation }) => {
 
       <ScrollView>
         <View>
-          <VideoDescription title={data.title} description={data.description} />
+          <VideoDescription
+            title={data.title}
+            description={data.description}
+            onOpen={() => {
+              setDescriptionOpen(true);
+            }}
+          />
         </View>
 
         <Divider />
@@ -91,6 +102,18 @@ const PlayVideo = ({ route, navigation }) => {
           </Container>
         )}
       </ScrollView>
+
+      <DescriptionSheet
+        top={videoHeight}
+        open={descriptionOpen}
+        onClose={() => {
+          setDescriptionOpen(false);
+        }}
+      >
+        <Container>
+          <Text>{data.description}</Text>
+        </Container>
+      </DescriptionSheet>
     </SafeAreaView>
   );
 };
