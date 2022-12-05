@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   DefaultTheme as PaperTheme,
   Provider as PaperContainer,
+  Colors,
 } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -39,6 +40,7 @@ const Bootstrap = (WrappedApp) => {
       colors: {
         ...NavigationTheme.colors,
         ...PaperTheme.colors,
+        disabled: Colors.grey300,
       },
     };
 
