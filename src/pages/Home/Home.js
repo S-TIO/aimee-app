@@ -43,7 +43,7 @@ const MENU = [
   {
     id: '3',
     title: 'Startup',
-    link: '',
+    link: 'Startup',
     icon: 'rocket',
   },
   {
