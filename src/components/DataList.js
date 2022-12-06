@@ -1,23 +1,25 @@
 import propTypes from 'prop-types';
-import { View, StyleSheet } from 'react-native';
-import {
-  TouchableRipple,
-  Colors,
-  Avatar,
-  Text,
-  useTheme,
-} from 'react-native-paper';
+import { View, StyleSheet, Image } from 'react-native';
+import { TouchableRipple, Colors, Text, useTheme } from 'react-native-paper';
 
 import Container from '../layout/Container';
 
-const DataList = ({ name, description, location }) => {
+const DataList = ({ name, description, location, image }) => {
   const { colors } = useTheme();
 
   return (
     <View>
       <TouchableRipple onPress={() => {}} rippleColor={Colors.grey300}>
         <View style={styles.container}>
-          <Avatar.Text label="NL" />
+          <Image
+            source={{ uri: image }}
+            style={[
+              styles.image,
+              {
+                backgroundColor: colors.surface,
+              },
+            ]}
+          />
 
           <View style={styles.textContainer}>
             <Text
@@ -65,6 +67,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 8,
+  },
+  image: {
+    height: 64,
+    width: 64,
+    resizeMode: 'contain',
+    borderRadius: 8,
   },
   textContainer: { bottom: 2, flex: 1 },
   nameText: { marginLeft: 8, fontSize: 18 },
