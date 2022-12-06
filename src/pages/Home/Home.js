@@ -37,7 +37,7 @@ const MENU = [
   {
     id: '2',
     title: 'Mentor',
-    link: '',
+    link: 'Mentor',
     icon: 'account-tie',
   },
   {
