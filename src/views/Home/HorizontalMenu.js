@@ -1,29 +1,37 @@
+import { useNavigation } from '@react-navigation/native';
 import propTypes from 'prop-types';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Menu = ({ menu }) => {
   const { colors } = useTheme();
+  const navigation = useNavigation();
 
   return (
-    <View style={styles.menuOuterContainer}>
-      <View
-        style={[
-          styles.menuInnerContainer,
-          {
-            backgroundColor: colors.primary,
-          },
-        ]}
-      >
-        <MaterialCommunityIcons
-          name={menu.icon}
-          color={colors.surface}
-          size={32}
-        />
+    <TouchableOpacity
+      onPress={() => navigation.navigate(menu.link)}
+      activeOpacity={0.6}
+      style={styles.menuOuterContainer}
+    >
+      <View style={styles.alignCenter}>
+        <View
+          style={[
+            styles.menuInnerContainer,
+            {
+              backgroundColor: colors.primary,
+            },
+          ]}
+        >
+          <MaterialCommunityIcons
+            name={menu.icon}
+            color={colors.surface}
+            size={32}
+          />
+        </View>
+        <Text style={styles.menuText}>{menu.title}</Text>
       </View>
-      <Text style={styles.menuText}>{menu.title}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -53,9 +61,8 @@ export default HorizontalMenu;
 const styles = StyleSheet.create({
   menuOuterContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
+  alignCenter: { justifyContent: 'center', alignItems: 'center' },
   menuInnerContainer: {
     borderRadius: 8,
     aspectRatio: 1 / 1,
