@@ -17,6 +17,7 @@ import Home from './src/pages/Home';
 import Login from './src/pages/Login';
 import Mentor from './src/pages/Mentor';
 import PlayVideo from './src/pages/PlayVideo';
+import Startup from './src/pages/Startup';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,7 @@ const StackNavigation = () => {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Mentor" component={Mentor} />
+      <Stack.Screen name="Startup" component={Startup} />
       <Stack.Screen name="PlayVideo" component={PlayVideo} />
     </Stack.Navigator>
   );
