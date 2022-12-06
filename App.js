@@ -15,6 +15,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import Home from './src/pages/Home';
 import Login from './src/pages/Login';
+import Mentor from './src/pages/Mentor';
 import PlayVideo from './src/pages/PlayVideo';
 
 const Stack = createNativeStackNavigator();
@@ -27,6 +28,7 @@ const StackNavigation = () => {
     >
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Mentor" component={Mentor} />
       <Stack.Screen name="PlayVideo" component={PlayVideo} />
     </Stack.Navigator>
   );
