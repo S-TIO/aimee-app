@@ -13,6 +13,7 @@ const StartupList = ({ startups }) => {
             name={mentor.name}
             description={mentor.description}
             location={mentor.address}
+            image={mentor.image}
           />
         );
       })}
