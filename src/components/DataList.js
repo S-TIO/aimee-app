@@ -28,7 +28,9 @@ const DataList = ({ name, description, location }) => {
               {name}
             </Text>
             <View style={styles.descriptionContainer}>
-              <Text>{description}</Text>
+              <Text numberOfLines={3} ellipsizeMode="tail">
+                {description}
+              </Text>
               <Text style={styles.subDescription}>{location}</Text>
             </View>
           </View>
@@ -66,7 +68,7 @@ const styles = StyleSheet.create({
   },
   textContainer: { bottom: 2, flex: 1 },
   nameText: { marginLeft: 8, fontSize: 18 },
-  descriptionContainer: { marginLeft: 8 },
+  descriptionContainer: { marginLeft: 8, flex: 1 },
   subDescription: { marginTop: 2 },
   line: { height: 1, width: '100%' },
 });
