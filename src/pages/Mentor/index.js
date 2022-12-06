@@ -58,7 +58,10 @@ const Mentor = ({ navigation }) => {
         <Appbar.Content title="Mentor" />
       </Appbar.Header>
 
-      <ScrollView style={{ backgroundColor: colors.surface }}>
+      <ScrollView
+        style={{ backgroundColor: colors.surface }}
+        contentContainerStyle={styles.scrolViewContent}
+      >
         <Search />
         <MentorList mentors={MENTOR} />
       </ScrollView>
@@ -70,4 +73,5 @@ export default Mentor;
 
 const styles = StyleSheet.create({
   searchIcon: { top: 2 },
+  scrolViewContent: { paddingBottom: 16 },
 });

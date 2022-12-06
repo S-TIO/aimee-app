@@ -58,7 +58,10 @@ const Startup = ({ navigation }) => {
         <Appbar.Content title="Startup" />
       </Appbar.Header>
 
-      <ScrollView style={{ backgroundColor: colors.surface }}>
+      <ScrollView
+        style={{ backgroundColor: colors.surface }}
+        contentContainerStyle={styles.scrolViewContent}
+      >
         <Search />
         <StartupList startups={STARTUP} />
       </ScrollView>
@@ -70,4 +73,5 @@ export default Startup;
 
 const styles = StyleSheet.create({
   searchIcon: { top: 2 },
+  scrolViewContent: { paddingBottom: 16 },
 });
