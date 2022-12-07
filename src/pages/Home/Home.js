@@ -31,7 +31,7 @@ const MENU = [
   {
     id: '1',
     title: 'Program',
-    link: '',
+    link: 'Program',
     icon: 'chip',
   },
   {
