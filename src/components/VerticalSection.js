@@ -49,23 +49,25 @@ const VerticalSection = ({ title, data }) => {
 
   return (
     <View>
-      <Container mb={8}>
-        <View style={styles.flatListHeaderContainer}>
-          <Text style={styles.flatListHeader}>{title}</Text>
-          <TouchableOpacity activeOpacity={0.6}>
-            <Text
-              style={[
-                styles.flatListHeaderLink,
-                {
-                  color: colors.primary,
-                },
-              ]}
-            >
-              View more
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </Container>
+      {title && (
+        <Container mb={8}>
+          <View style={styles.flatListHeaderContainer}>
+            <Text style={styles.flatListHeader}>{title}</Text>
+            <TouchableOpacity activeOpacity={0.6}>
+              <Text
+                style={[
+                  styles.flatListHeaderLink,
+                  {
+                    color: colors.primary,
+                  },
+                ]}
+              >
+                View more
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Container>
+      )}
 
       <FlatList
         data={data}
