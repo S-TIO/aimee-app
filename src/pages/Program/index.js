@@ -14,7 +14,7 @@ const MENUS = [
     title: 'Seminar and Workshop',
     subtitle:
       'Pembekalan pengetahuan teknis dan softskill untuk membangun Startup',
-    to: '',
+    to: 'AllSeminar',
     icon: 'account-group',
   },
   {
