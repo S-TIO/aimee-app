@@ -49,7 +49,7 @@ const MENU = [
   {
     id: '4',
     title: 'Matchmaking',
-    link: '',
+    link: 'Matchmaking',
     icon: 'puzzle',
   },
 ];
