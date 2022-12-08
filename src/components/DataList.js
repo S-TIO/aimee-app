@@ -11,15 +11,17 @@ const DataList = ({ name, description, location, image }) => {
     <View>
       <TouchableRipple onPress={() => {}} rippleColor={Colors.grey300}>
         <View style={styles.container}>
-          <Image
-            source={{ uri: image }}
-            style={[
-              styles.image,
-              {
-                backgroundColor: colors.surface,
-              },
-            ]}
-          />
+          <View>
+            <Image
+              source={{ uri: image }}
+              style={[
+                styles.image,
+                {
+                  backgroundColor: colors.surface,
+                },
+              ]}
+            />
+          </View>
 
           <View style={styles.textContainer}>
             <Text
