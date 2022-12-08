@@ -18,6 +18,7 @@ import AllSeminar from './src/pages/AllSeminar';
 import AllSharing from './src/pages/AllSharing';
 import Home from './src/pages/Home';
 import Login from './src/pages/Login';
+import Matchmaking from './src/pages/Matchmaking';
 import Mentor from './src/pages/Mentor';
 import PlayVideo from './src/pages/PlayVideo';
 import Program from './src/pages/Program';
@@ -39,6 +40,7 @@ const StackNavigation = () => {
       <Stack.Screen name="AllClass" component={AllClass} />
       <Stack.Screen name="Mentor" component={Mentor} />
       <Stack.Screen name="Startup" component={Startup} />
+      <Stack.Screen name="Matchmaking" component={Matchmaking} />
       <Stack.Screen name="PlayVideo" component={PlayVideo} />
     </Stack.Navigator>
   );
