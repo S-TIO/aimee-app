@@ -27,7 +27,7 @@ const MENUS = [
   {
     title: 'Online Class',
     subtitle: 'Pendampingan dan bimbingan yang dilakukan oleh Mentor AIMEE',
-    to: '',
+    to: 'AllClass',
     icon: 'school',
   },
   {
