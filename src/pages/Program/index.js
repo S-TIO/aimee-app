@@ -21,7 +21,7 @@ const MENUS = [
     title: 'Sharing SantAII',
     subtitle:
       'Pembekalan ilmu untuk mengembangkan bisnis didampingi oleh praktisi ahli',
-    to: '',
+    to: 'AllSharing',
     icon: 'podcast',
   },
   {
