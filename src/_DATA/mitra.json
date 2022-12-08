@@ -1,0 +1,23 @@
+[
+  {
+    "name": "PT Alfabet Inkubator Indonesia",
+    "image": "https://i.postimg.cc/WbCWdrrC/aii-1.jpg",
+    "description": "Perusahaan bisnis yang bergerak pada bidang Startup Bisnis Digital.",
+    "address": "Tangerang",
+    "link": ""
+  },
+  {
+    "name": "PT Pandawan",
+    "image": "https://i.postimg.cc/Pr7XN6SH/pandawan-1.jpg",
+    "description": "Startup yang memberikan layanan untuk kemudahan dalam menciptakan serta mengelola semua kegiatan belajar mengajar.",
+    "address": "Tangerang",
+    "link": ""
+  },
+  {
+    "name": "PT BigBoyz Indonesia",
+    "image": "https://i.postimg.cc/j5wxHmZt/bb-1.jpg",
+    "description": "Startupreneur favorit di bidang kopi yang sejalan dengan kegiatan Tri Dharma pengabdian masyarakat.",
+    "address": "Tangerang",
+    "link": ""
+  }
+]
