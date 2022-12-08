@@ -14,6 +14,7 @@ import {
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import AllSeminar from './src/pages/AllSeminar';
+import AllSharing from './src/pages/AllSharing';
 import Home from './src/pages/Home';
 import Login from './src/pages/Login';
 import Mentor from './src/pages/Mentor';
@@ -33,6 +34,7 @@ const StackNavigation = () => {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Program" component={Program} />
       <Stack.Screen name="AllSeminar" component={AllSeminar} />
+      <Stack.Screen name="AllSharing" component={AllSharing} />
       <Stack.Screen name="Mentor" component={Mentor} />
       <Stack.Screen name="Startup" component={Startup} />
       <Stack.Screen name="PlayVideo" component={PlayVideo} />
