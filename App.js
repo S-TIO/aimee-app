@@ -30,6 +30,7 @@ import Matchmaking from './src/pages/Matchmaking';
 import Mentor from './src/pages/Mentor';
 import PlayVideo from './src/pages/PlayVideo';
 import Program from './src/pages/Program';
+import Register from './src/pages/Register';
 import Startup from './src/pages/Startup';
 
 const firebaseConfig = {
@@ -58,7 +59,10 @@ const StackNavigation = () => {
       {!auth.initialized && <Stack.Screen name="Loading" component={Loading} />}
 
       {!auth.user && auth.initialized && (
-        <Stack.Screen name="Login" component={Login} />
+        <>
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
+        </>
       )}
 
       {auth.user && auth.initialized && (
