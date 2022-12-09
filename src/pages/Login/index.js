@@ -80,12 +80,12 @@ const Login = ({ navigation }) => {
 
         <Container mt={24}>
           <Text
-            style={
-              (styles.textRegister,
+            style={[
+              styles.textRegister,
               {
                 color: Colors.grey600,
-              })
-            }
+              },
+            ]}
           >
             Don't have an account?
           </Text>
