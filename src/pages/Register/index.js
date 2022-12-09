@@ -23,15 +23,16 @@ const Register = ({ navigation }) => {
   const { colors } = useTheme();
   const auth = useAuth();
 
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
 
   const handleRegister = async () => {
-    if (!email || !password || !password2) return;
+    if (!name || !email || !password || !password2) return;
 
     if (password === password2) {
-      const res = await auth.register(email, password);
+      const res = await auth.register(name, email, password);
       if (res?.error) {
         ToastAndroid.show('Registration failed', ToastAndroid.SHORT);
       } else {
@@ -70,10 +71,17 @@ const Register = ({ navigation }) => {
 
         <Container mt={8}>
           <TextInput
+            label="Name"
+            value={name}
+            onChangeText={setName}
+            mode="outlined"
+          />
+          <TextInput
             label="Email"
             value={email}
             onChangeText={setEmail}
             mode="outlined"
+            style={styles.passwordInput}
           />
           <TextInput
             label="Password"

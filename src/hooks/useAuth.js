@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   createUserWithEmailAndPassword,
+  updateProfile,
   getReactNativePersistence,
 } from 'firebase/auth/react-native';
 import { useEffect, useState, useContext, createContext } from 'react';
@@ -56,7 +57,7 @@ const useProvideAuth = () => {
     }
   };
 
-  const register = async (email, password) => {
+  const register = async (displayName, email, password) => {
     try {
       setLoading(true);
 
@@ -65,6 +66,8 @@ const useProvideAuth = () => {
         email,
         password
       );
+      await updateProfile(auth.currentUser, { displayName });
+
       setUser(credential.user);
     } catch (error) {
       setLoading(false);
