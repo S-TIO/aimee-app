@@ -71,7 +71,7 @@ const Register = ({ navigation }) => {
 
         <Container mt={8}>
           <TextInput
-            label="Name"
+            label="Full Name"
             value={name}
             onChangeText={setName}
             mode="outlined"
