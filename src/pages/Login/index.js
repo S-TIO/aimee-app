@@ -27,6 +27,8 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
+    if (!email || !password) return;
+
     const res = await auth.login(email, password);
     if (res?.error)
       ToastAndroid.show('Invalid username or password', ToastAndroid.SHORT);
@@ -90,7 +92,10 @@ const Login = ({ navigation }) => {
             Don't have an account?
           </Text>
           <View style={styles.registerButton}>
-            <TouchableOpacity onPress={() => {}} activeOpacity={0.6}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Register')}
+              activeOpacity={0.6}
+            >
               <Text
                 style={[
                   styles.registerButtonText,
