@@ -38,6 +38,7 @@ const useProvideAuth = () => {
       );
       setUser(credential.user);
     } catch (error) {
+      setLoading(false);
       return { error };
     }
   };
@@ -49,6 +50,7 @@ const useProvideAuth = () => {
       await signOut(auth);
       setUser(null);
     } catch (error) {
+      setLoading(false);
       return { error };
     }
   };
