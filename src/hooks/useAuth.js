@@ -4,6 +4,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   signOut,
+  createUserWithEmailAndPassword,
   getReactNativePersistence,
 } from 'firebase/auth/react-native';
 import { useEffect, useState, useContext, createContext } from 'react';
@@ -55,6 +56,23 @@ const useProvideAuth = () => {
     }
   };
 
+  const register = async (email, password) => {
+    try {
+      setLoading(true);
+
+      const credential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setUser(credential.user);
+    } catch (error) {
+      setLoading(false);
+
+      return { error };
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((state) => {
       if (state) {
@@ -71,7 +89,7 @@ const useProvideAuth = () => {
     return () => unsubscribe();
   }, []);
 
-  return { user, loading, initialized, login, logout };
+  return { user, loading, initialized, login, logout, register };
 };
 
 export { ProvideAuth, useAuth };
