@@ -32,7 +32,7 @@ const Profile = ({ navigation }) => {
       <ScrollView>
         <Container mt={16}>
           <ProfileAvatar
-            name="Muhammad Faizal Fazri"
+            name={auth.user.displayName || auth.user.email}
             avatar=" "
             status="Anggota AIMEE"
           />
