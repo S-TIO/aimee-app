@@ -4,6 +4,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
+import { initializeApp } from 'firebase/app';
 import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
@@ -13,10 +14,12 @@ import {
 } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { ProvideAuth, useAuth } from './src/hooks/useAuth';
 import AllClass from './src/pages/AllClass';
 import AllSeminar from './src/pages/AllSeminar';
 import AllSharing from './src/pages/AllSharing';
 import Home from './src/pages/Home';
+import Loading from './src/pages/Loading';
 import Login from './src/pages/Login';
 import Matchmaking from './src/pages/Matchmaking';
 import Mentor from './src/pages/Mentor';
@@ -24,24 +27,45 @@ import PlayVideo from './src/pages/PlayVideo';
 import Program from './src/pages/Program';
 import Startup from './src/pages/Startup';
 
+const firebaseConfig = {
+  apiKey: 'AIzaSyBZFSmbHeYCYVGumA0RfMK0tPYVrxLaRjc',
+  authDomain: 'aimee-f366c.firebaseapp.com',
+  projectId: 'aimee-f366c',
+  storageBucket: 'aimee-f366c.appspot.com',
+  messagingSenderId: '745239689277',
+  appId: '1:745239689277:web:1824c330f7bd90e8ea1254',
+};
+initializeApp(firebaseConfig);
+
 const Stack = createNativeStackNavigator();
 
 const StackNavigation = () => {
+  const auth = useAuth();
+
   return (
     <Stack.Navigator
       initialRouteName="Login"
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Program" component={Program} />
-      <Stack.Screen name="AllSeminar" component={AllSeminar} />
-      <Stack.Screen name="AllSharing" component={AllSharing} />
-      <Stack.Screen name="AllClass" component={AllClass} />
-      <Stack.Screen name="Mentor" component={Mentor} />
-      <Stack.Screen name="Startup" component={Startup} />
-      <Stack.Screen name="Matchmaking" component={Matchmaking} />
-      <Stack.Screen name="PlayVideo" component={PlayVideo} />
+      {!auth.initialized && <Stack.Screen name="Loading" component={Loading} />}
+
+      {!auth.user && auth.initialized && (
+        <Stack.Screen name="Login" component={Login} />
+      )}
+
+      {auth.user && auth.initialized && (
+        <>
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Program" component={Program} />
+          <Stack.Screen name="AllSeminar" component={AllSeminar} />
+          <Stack.Screen name="AllSharing" component={AllSharing} />
+          <Stack.Screen name="AllClass" component={AllClass} />
+          <Stack.Screen name="Mentor" component={Mentor} />
+          <Stack.Screen name="Startup" component={Startup} />
+          <Stack.Screen name="Matchmaking" component={Matchmaking} />
+          <Stack.Screen name="PlayVideo" component={PlayVideo} />
+        </>
+      )}
     </Stack.Navigator>
   );
 };
@@ -60,14 +84,16 @@ const Bootstrap = (WrappedApp) => {
 
     return (
       <GestureHandlerRootView style={styles.root}>
-        <SafeAreaProvider>
-          <PaperContainer theme={theme}>
-            <NavigationContainer theme={theme}>
-              <WrappedApp />
-              <StatusBar translucent />
-            </NavigationContainer>
-          </PaperContainer>
-        </SafeAreaProvider>
+        <ProvideAuth>
+          <SafeAreaProvider>
+            <PaperContainer theme={theme}>
+              <NavigationContainer theme={theme}>
+                <WrappedApp />
+                <StatusBar translucent />
+              </NavigationContainer>
+            </PaperContainer>
+          </SafeAreaProvider>
+        </ProvideAuth>
       </GestureHandlerRootView>
     );
   };
