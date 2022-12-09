@@ -4,16 +4,19 @@ import {
 } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { ScrollView, Text, StyleSheet } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { useTheme, Button } from 'react-native-paper';
 
 import Divider from '../../components/Divider';
 import MenuList from '../../components/MenuList';
 import SafeAreaView from '../../components/SafeAreaView';
+import { useAuth } from '../../hooks/useAuth';
 import Container from '../../layout/Container';
 import ProfileAvatar from '../../views/Profile/ProfileAvatar';
 
 const Profile = ({ navigation }) => {
   const { colors } = useTheme();
+  const auth = useAuth();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -65,7 +68,7 @@ const Profile = ({ navigation }) => {
         <Divider />
 
         <Button
-          onPress={() => {}}
+          onPress={() => auth.logout()}
           mode="contained"
           style={[
             styles.logoutButton,
@@ -77,6 +80,8 @@ const Profile = ({ navigation }) => {
           Logout
         </Button>
       </ScrollView>
+
+      {auth.loading && <Spinner visible />}
     </SafeAreaView>
   );
 };

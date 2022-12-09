@@ -4,12 +4,15 @@ import {
 } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { Button, useTheme } from 'react-native-paper';
 
 import SafeAreaView from '../../components/SafeAreaView';
+import { useAuth } from '../../hooks/useAuth';
 
 const Login = ({ navigation }) => {
   const { colors } = useTheme();
+  const auth = useAuth();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -26,10 +29,15 @@ const Login = ({ navigation }) => {
         <Text>Login</Text>
       </View>
       <View style={styles.buttonContainer}>
-        <Button mode="contained" onPress={() => navigation.navigate('Home')}>
+        <Button
+          mode="contained"
+          onPress={async () => auth.login('user@aimee.id', 'user-123')}
+        >
           Login
         </Button>
       </View>
+
+      {auth.loading && <Spinner visible />}
     </SafeAreaView>
   );
 };
