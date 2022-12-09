@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   DefaultTheme as NavigationTheme,
   NavigationContainer,
@@ -5,6 +6,10 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { initializeApp } from 'firebase/app';
+import {
+  initializeAuth,
+  getReactNativePersistence,
+} from 'firebase/auth/react-native';
 import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
@@ -35,7 +40,10 @@ const firebaseConfig = {
   messagingSenderId: '745239689277',
   appId: '1:745239689277:web:1824c330f7bd90e8ea1254',
 };
-initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
+initializeAuth(firebaseApp, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
 
 const Stack = createNativeStackNavigator();
 
