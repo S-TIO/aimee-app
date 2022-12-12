@@ -20,6 +20,8 @@ const Item = ({ item }) => {
         onPress={() => {
           if (item.type === 'VIDEO') {
             navigation.navigate('PlayVideo', { data: item });
+          } else {
+            navigation.navigate('ViewBlog', { data: item });
           }
         }}
         rippleColor={Colors.grey300}

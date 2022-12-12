@@ -32,6 +32,7 @@ import PlayVideo from './src/pages/PlayVideo';
 import Program from './src/pages/Program';
 import Register from './src/pages/Register';
 import Startup from './src/pages/Startup';
+import ViewBlog from './src/pages/ViewBlog';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBZFSmbHeYCYVGumA0RfMK0tPYVrxLaRjc',
@@ -76,6 +77,7 @@ const StackNavigation = () => {
           <Stack.Screen name="Startup" component={Startup} />
           <Stack.Screen name="Matchmaking" component={Matchmaking} />
           <Stack.Screen name="PlayVideo" component={PlayVideo} />
+          <Stack.Screen name="ViewBlog" component={ViewBlog} />
         </>
       )}
     </Stack.Navigator>

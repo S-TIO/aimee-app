@@ -86,6 +86,7 @@ const POSTS = posts.map((post) => {
     id: String(post.id),
     title: post.title.rendered,
     cover: post.yoast_head_json.og_image[0].url,
+    content: post.content.rendered,
     link: post.link,
     type: 'WEBSITE',
   };
@@ -122,7 +123,7 @@ const SECTIONS = [
   },
   {
     title: 'Blog and News',
-    data: POSTS.slice(30, 35),
+    data: POSTS,
   },
 ];
 
