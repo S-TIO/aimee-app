@@ -90,6 +90,7 @@ const Bootstrap = (WrappedApp) => {
       colors: {
         ...NavigationTheme.colors,
         ...PaperTheme.colors,
+        primary: Colors.green600,
         disabled: Colors.grey300,
       },
     };
