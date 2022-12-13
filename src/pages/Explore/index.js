@@ -68,21 +68,25 @@ const SECTIONS = [
     title: 'Seminar and Workshop',
     horizontal: true,
     data: SEMINARWORKSHOP,
+    viewAll: 'AllSeminar',
   },
   {
     title: 'Sharing SantAII',
     horizontal: true,
     data: SHARINGSANTAII,
+    viewAll: 'AllSharing',
   },
   {
     title: 'Online Course',
     horizontal: true,
     data: ONLINECLASS,
+    viewAll: 'AllClass',
   },
   {
     title: 'Blog and News',
     horizontal: true,
     data: POSTS,
+    viewAll: 'AllSeminar',
   },
 ];
 
@@ -129,7 +133,11 @@ const Explore = ({ navigation }) => {
             return <CategorySlider data={section.data} />;
 
           return (
-            <HorizontalSection title={section.title} data={section.data} />
+            <HorizontalSection
+              viewAll={section.viewAll}
+              title={section.title}
+              data={section.data}
+            />
           );
         }}
         renderItem={() => null}

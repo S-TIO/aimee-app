@@ -51,11 +51,13 @@ const SECTIONS = [
       ...SEMINARWORKSHOP.slice(0, 1),
       ...SHARINGSANTAII.slice(1, 2),
     ],
+    viewAll: 'AllSharing',
   },
   {
     title: 'My Courses',
     horizontal: true,
     data: ONLINECLASS.slice(0, 3),
+    viewAll: 'AllClass',
   },
 ];
 
@@ -103,10 +105,20 @@ const Explore = ({ navigation }) => {
 
           if (section.title === 'History')
             return (
-              <HorizontalSection title={section.title} data={section.data} />
+              <HorizontalSection
+                viewAll={section.viewAll}
+                title={section.title}
+                data={section.data}
+              />
             );
 
-          return <VerticalSection title={section.title} data={section.data} />;
+          return (
+            <VerticalSection
+              viewAll={section.viewAll}
+              title={section.title}
+              data={section.data}
+            />
+          );
         }}
         renderItem={() => null}
         keyExtractor={(item, index) => String(item + index)}

@@ -46,7 +46,8 @@ const Item = ({ item }) => {
   );
 };
 
-const HorizontalSection = ({ title, data }) => {
+const HorizontalSection = ({ title, data, viewAll }) => {
+  const navigation = useNavigation();
   const { colors } = useTheme();
 
   return (
@@ -54,7 +55,10 @@ const HorizontalSection = ({ title, data }) => {
       <Container mb={8}>
         <View style={styles.flatListHeaderContainer}>
           <Text style={styles.flatListHeader}>{title}</Text>
-          <TouchableOpacity activeOpacity={0.6}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => navigation.navigate(viewAll)}
+          >
             <Text
               style={[
                 styles.flatListHeaderLink,

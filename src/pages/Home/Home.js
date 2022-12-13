@@ -120,10 +120,12 @@ const SECTIONS = [
   {
     title: 'Recommended for You',
     data: SHARINGSANTAII.slice(0, 5),
+    viewAll: 'AllSharing',
   },
   {
     title: 'Blog and News',
     data: POSTS,
+    viewAll: 'AllSeminar',
   },
 ];
 
@@ -211,7 +213,7 @@ const Home = ({ navigation }) => {
           if (section.title === 'Menu')
             return (
               <Container mt={24}>
-                <HorizontalMenu data={section.data} />
+                <HorizontalMenu viewAll={section.viewAll} data={section.data} />
               </Container>
             );
 
@@ -219,11 +221,19 @@ const Home = ({ navigation }) => {
 
           if (section.title === 'Blog and News')
             return (
-              <VerticalSection title={section.title} data={section.data} />
+              <VerticalSection
+                viewAll={section.viewAll}
+                title={section.title}
+                data={section.data}
+              />
             );
 
           return (
-            <HorizontalSection title={section.title} data={section.data} />
+            <HorizontalSection
+              viewAll={section.viewAll}
+              title={section.title}
+              data={section.data}
+            />
           );
         }}
         renderItem={() => null}

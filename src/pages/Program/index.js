@@ -34,7 +34,7 @@ const MENUS = [
     title: 'Matchmaking',
     subtitle:
       'Pencarian mitra bisnis dan penginputan proposal-proposal mengenai Startup',
-    to: '',
+    to: 'Matchmaking',
     icon: 'puzzle',
   },
 ];
