@@ -35,12 +35,12 @@ import Startup from './src/pages/Startup';
 import ViewBlog from './src/pages/ViewBlog';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBZFSmbHeYCYVGumA0RfMK0tPYVrxLaRjc',
-  authDomain: 'aimee-f366c.firebaseapp.com',
-  projectId: 'aimee-f366c',
-  storageBucket: 'aimee-f366c.appspot.com',
-  messagingSenderId: '745239689277',
-  appId: '1:745239689277:web:1824c330f7bd90e8ea1254',
+  apiKey: 'AIzaSyBM6mjoMCk20nk4ClG8mCaYzzUn8hcO-YQ',
+  authDomain: 'aimee-6d10e.firebaseapp.com',
+  projectId: 'aimee-6d10e',
+  storageBucket: 'aimee-6d10e.appspot.com',
+  messagingSenderId: '361835717642',
+  appId: '1:361835717642:web:47ba5cfdadbccaf867ebf3',
 };
 const firebaseApp = initializeApp(firebaseConfig);
 initializeAuth(firebaseApp, {
