@@ -1,15 +1,14 @@
 import {
   setStatusBarBackgroundColor,
   setStatusBarStyle,
-  StatusBar
 } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { ScrollView, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { useTheme, TextInput, Appbar } from 'react-native-paper';
-import STARTUP from '../../_DATA/startup.json';
-import Container from '../../layout/Container';
-import StartupList from '../../views/Startup/StartupList';
 
+import MITRA from '../../_DATA/mitra.json';
+import Container from '../../layout/Container';
+import MitraList from '../../views/Mitra/MitraList';
 
 const Search = () => {
   const { colors } = useTheme();
@@ -32,7 +31,7 @@ const Search = () => {
   );
 };
 
-const Startup = ({ navigation }) => {
+const Mitra = ({ navigation }) => {
   const { colors } = useTheme();
 
   useEffect(() => {
@@ -56,7 +55,7 @@ const Startup = ({ navigation }) => {
             navigation.goBack();
           }}
         />
-        <Appbar.Content title="Startup" />
+        <Appbar.Content title="Mitra" />
       </Appbar.Header>
 
       <ScrollView
@@ -64,59 +63,15 @@ const Startup = ({ navigation }) => {
         contentContainerStyle={styles.scrolViewContent}
       >
         <Search />
-        <StartupList startups={STARTUP} />
+        <MitraList mitras={MITRA} />
       </ScrollView>
-
-      <View style={styles.lockedButtonContainer}>
-        <TouchableOpacity
-          style={styles.lockedButton}
-          onPress={() =>
-            navigation.navigate('AddStartup')}
-              activeOpacity={0.6}
-        >
-          <Text
-            style={[
-              styles.addStartupButtonText,
-              {
-                color: 'white',
-              },
-            ]}
-          >
-            Add Startup
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Status bar */}
-      <StatusBar style="auto" />
     </>
   );
 };
 
-
-
-export default Startup;
+export default Mitra;
 
 const styles = StyleSheet.create({
   searchIcon: { top: 2 },
-  scrolViewContent: { paddingBottom: 16, flexGrow: 1, },
-  lockedButtonContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  lockedButton: {
-    backgroundColor: 'green',
-    padding: 15,
-    borderRadius: 10,
-  },
-  addStartupButtonText: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    textAlign: 'center',
-  },
+  scrolViewContent: { paddingBottom: 16 },
 });

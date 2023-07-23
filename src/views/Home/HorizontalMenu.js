@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 4,
   },
-  menuText: { fontSize: 12 },
+  menuText: { fontSize: 10 },
   rootMenuContainer: {
     justifyContent: 'center',
     alignItems: 'center',

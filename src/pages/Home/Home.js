@@ -48,6 +48,12 @@ const MENU = [
   },
   {
     id: '4',
+    title: 'Mitra',
+    link: 'Mitra',
+    icon: 'handshake',
+  },
+  {
+    id: '5',
     title: 'Matchmaking',
     link: 'Matchmaking',
     icon: 'puzzle',

@@ -10,6 +10,7 @@ import {
   initializeAuth,
   getReactNativePersistence,
 } from 'firebase/auth/react-native';
+import { getFirestore } from 'firebase/firestore';
 import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
@@ -26,13 +27,15 @@ import AllSharing from './src/pages/AllSharing';
 import Home from './src/pages/Home';
 import Loading from './src/pages/Loading';
 import Login from './src/pages/Login';
-import Matchmaking from './src/pages/Matchmaking';
+import Mitra from './src/pages/Mitra';
 import Mentor from './src/pages/Mentor';
 import PlayVideo from './src/pages/PlayVideo';
 import Program from './src/pages/Program';
 import Register from './src/pages/Register';
 import Startup from './src/pages/Startup';
 import ViewBlog from './src/pages/ViewBlog';
+import Matchmaking from './src/pages/Matchmaking';
+import AddStartup from './src/pages/AddStartup';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBM6mjoMCk20nk4ClG8mCaYzzUn8hcO-YQ',
@@ -46,6 +49,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 initializeAuth(firebaseApp, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
+export const db = getFirestore(App);
 
 const Stack = createNativeStackNavigator();
 
@@ -74,10 +78,12 @@ const StackNavigation = () => {
           <Stack.Screen name="AllSharing" component={AllSharing} />
           <Stack.Screen name="AllClass" component={AllClass} />
           <Stack.Screen name="Mentor" component={Mentor} />
-          <Stack.Screen name="Startup" component={Startup} />
           <Stack.Screen name="Matchmaking" component={Matchmaking} />
+          <Stack.Screen name="Startup" component={Startup} />
+          <Stack.Screen name="Mitra" component={Mitra} />
           <Stack.Screen name="PlayVideo" component={PlayVideo} />
           <Stack.Screen name="ViewBlog" component={ViewBlog} />
+          <Stack.Screen name="AddStartup" component={AddStartup} />
         </>
       )}
     </Stack.Navigator>
@@ -119,6 +125,8 @@ const App = () => {
 };
 
 export default Bootstrap(App);
+
+
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
