@@ -9,11 +9,18 @@ const StartupList = ({ startups }) => {
       {startups.map((mentor, index) => {
         return (
           <DataList
+            id={mentor.id}
             key={mentor.name + index}
             name={mentor.name}
             description={mentor.description}
-            location={mentor.address}
+            location={mentor.location}
             image={mentor.image}
+            businessmodel={mentor.modelBisnis}
+            sektorindustri={mentor.sektorIndustri}
+            ukurantim={mentor.ukuranTim}
+            pendanaan={mentor.pendanaan}
+            tahapperkembangan={mentor.tahapPerkembangan}
+            contact={mentor.contact}
           />
         );
       })}

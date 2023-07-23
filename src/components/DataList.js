@@ -6,7 +6,6 @@ import Container from '../layout/Container';
 
 const DataList = ({ name, description, location, image }) => {
   const { colors } = useTheme();
-
   return (
     <View>
       <TouchableRipple onPress={() => {}} rippleColor={Colors.grey300}>

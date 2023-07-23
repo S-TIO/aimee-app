@@ -1,24 +1,12 @@
-import {
-    setStatusBarBackgroundColor,
-    setStatusBarStyle,
-  } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import {
     StyleSheet,
-    TouchableOpacity,
-    View,
-    Text,
-    Image,
-    ToastAndroid,
     Keyboard,
   } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import Spinner from 'react-native-loading-spinner-overlay/lib';
-import { TextInput, Button, useTheme, Appbar, Colors } from 'react-native-paper';
-import { collection, doc, setDoc, addDoc } from "firebase/firestore"; 
+import { TextInput, Button, useTheme, Appbar } from 'react-native-paper';
+import { collection, addDoc } from "firebase/firestore"; 
 import { db } from '../../../App';
-import SafeAreaView from '../../components/SafeAreaView';
-import { useAuth } from '../../hooks/useAuth';
 import Container from '../../layout/Container';
 
 const AddStartup = ({ navigation }) => {

@@ -36,6 +36,7 @@ import Startup from './src/pages/Startup';
 import ViewBlog from './src/pages/ViewBlog';
 import Matchmaking from './src/pages/Matchmaking';
 import AddStartup from './src/pages/AddStartup';
+import StartupDetails from './src/pages/StartupDetails';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBM6mjoMCk20nk4ClG8mCaYzzUn8hcO-YQ',
@@ -84,6 +85,7 @@ const StackNavigation = () => {
           <Stack.Screen name="PlayVideo" component={PlayVideo} />
           <Stack.Screen name="ViewBlog" component={ViewBlog} />
           <Stack.Screen name="AddStartup" component={AddStartup} />
+          <Stack.Screen name="StartupDetails" component={StartupDetails} />
         </>
       )}
     </Stack.Navigator>
