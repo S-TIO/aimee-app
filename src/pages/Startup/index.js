@@ -6,7 +6,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
-import { db } from '../../../App';
+import { db } from '../../../firebase';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View, TouchableOpacity, Text, FlatList, Pressable, Image } from 'react-native';
 import { useTheme, TextInput, Appbar } from 'react-native-paper';

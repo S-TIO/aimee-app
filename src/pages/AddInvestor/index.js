@@ -9,8 +9,9 @@ import { collection, addDoc } from "firebase/firestore";
 import { db } from '../../../firebase';
 import Container from '../../layout/Container';
 import DropDown from "react-native-paper-dropdown";
+import MatchingPage from '../MatchingPage';
 
-const AddStartup = ({ navigation }) => {
+const AddInvestor = ({ navigation }) => {
   const { colors } = useTheme();
   const [showDropDown1, setShowDropDown1] = useState(false);
   const [showDropDown2, setShowDropDown2] = useState(false);
@@ -46,35 +47,23 @@ const AddStartup = ({ navigation }) => {
     {label: 'Franchise', value: 'Franchise'}
   ];
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [location, setLocation] = useState('');
-  const [image, setImage] = useState('');
-  const [ukuranTim, setUkuranTim] = useState('');
   const [pendanaan, setPendanaan] = useState('');
   const [contact, setContact] = useState('');
 
   function create () {
-    addDoc(collection(db, "StartupList"), {
+    addDoc(collection(db, "InvestorList"), {
       name: name,
-      description: description,
-      location: location,
       sektorIndustri : sektorIndustri,
       tahapPerkembangan : tahapPerkembangan,
-      ukuranTim : Number(ukuranTim),
       modelBisnis : modelBisnis,
       pendanaan : Number(pendanaan),
-      image : image,
       contact : contact
     }).then(() => {
       setName('');
-      setDescription('');
-      setLocation('');
       setSektorIndustri('');
       setTahapPerkembangan('');
-      setUkuranTim('');
       setModelBisnis('');
       setPendanaan('');
-      setImage('');
       setContact('');
       Keyboard.dismiss;
       console.log('Data Submitted');
@@ -95,26 +84,14 @@ const AddStartup = ({ navigation }) => {
             navigation.goBack();
           }}
         />
-        <Appbar.Content title="Startup Registration" />
+        <Appbar.Content title="Investor Registration" />
       </Appbar.Header>
       <ScrollView>
         <Container mt={8}>
           <TextInput
-            label="Startup Name"
+            label="Name"
             value={name}
             onChangeText={setName}
-            mode="outlined"
-          />
-          <TextInput
-            label="Startup Description"
-            value={description}
-            onChangeText={setDescription}
-            mode="outlined"
-          />
-          <TextInput
-            label="Startup Location"
-            value={location}
-            onChangeText={setLocation}
             mode="outlined"
           />
           <DropDown
@@ -137,13 +114,6 @@ const AddStartup = ({ navigation }) => {
             setValue={setTahapPerkembangan}
             list={tahapPerkembanganList}
           />
-          <TextInput
-            label="Team Size"
-            placeholder='10'
-            value={ukuranTim}
-            onChangeText={setUkuranTim}
-            mode="outlined"
-          />
           <DropDown
             label={"Business Model"}
             mode={"outlined"}
@@ -155,17 +125,10 @@ const AddStartup = ({ navigation }) => {
             list={modelBisnisList}
           />
           <TextInput
-            label="Dana yang Dibutuhkan"
+            label="Besaran Investasi"
             placeholder='20000000'
             value={pendanaan}
             onChangeText={setPendanaan}
-            mode="outlined"
-          />
-          <TextInput
-            label="Startup Logo"
-            placeholder='image url'
-            value={image}
-            onChangeText={setImage}
             mode="outlined"
           />
           <TextInput
@@ -177,11 +140,20 @@ const AddStartup = ({ navigation }) => {
           />
 
           <Button
-            onPress={create}
+            onPress={() => {
+              // create();
+              navigation.navigate("MatchingPage", {
+                investorName: name,
+                investorSektorIndustri: sektorIndustri,
+                investorPendanaan: pendanaan,
+                investorTahapPerkembangan: tahapPerkembangan,
+                investorContact: contact,
+              });
+            }}
             mode="contained"
             style={styles.loginButton}
           >
-            Add Startup
+            Add Investor
           </Button>
         </Container>
       </ScrollView>
@@ -189,7 +161,7 @@ const AddStartup = ({ navigation }) => {
   );
 };
 
-export default AddStartup;
+export default AddInvestor;
 
 const styles = StyleSheet.create({
   scrolViewContent: { paddingBottom: 16, flexGrow: 1, },

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Button, Pressable, Image } from "react-native";
 import { useTheme, Appbar } from 'react-native-paper';
 import { doc, deleteDoc } from "firebase/firestore";
-import { db } from "../../../App";
+import { db } from "../../../firebase";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import Container from "../../layout/Container";

@@ -18,7 +18,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aimee"
     },
     "android": {
       "package": "com.aimee"
@@ -34,3 +35,4 @@
     "owner": "sulistio5681"
   }
 }
+

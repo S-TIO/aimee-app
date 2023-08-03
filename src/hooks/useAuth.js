@@ -10,6 +10,7 @@ import {
 } from 'firebase/auth/react-native';
 import { useEffect, useState, useContext, createContext } from 'react';
 
+
 const authContext = createContext();
 
 const ProvideAuth = ({ children }) => {

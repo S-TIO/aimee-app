@@ -43,14 +43,14 @@ const Profile = ({ navigation }) => {
           <Text style={styles.sectionHeader}>Account</Text>
         </Container>
         <MenuList text="Account Settings" icon="account-outline" />
-        <MenuList
+        {/* <MenuList
           text="My Startup"
           icon="lightbulb-on-outline"
           info={<Text style={{ color: colors.primary }}>Register now !</Text>}
         />
         <MenuList text="Favorites" icon="bookmark-outline" />
         <MenuList text="My Courses" icon="book-outline" />
-        <MenuList text="Badge and Certificate" icon="trophy-variant-outline" />
+        <MenuList text="Badge and Certificate" icon="trophy-variant-outline" /> */}
 
         <Divider />
 

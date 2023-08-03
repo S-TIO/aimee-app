@@ -7,23 +7,18 @@ import {
   import { Appbar, useTheme } from 'react-native-paper';
   
   import Container from '../../layout/Container';
-  import ProgramList from '../../views/Program/ProgramList';
+  import RoleList from '../../views/Matchmaking/RoleList';
   
   const MENUS = [
     {
       title: 'Investor',
-      to: 'AllSeminar',
-      icon: '',
+      to: 'AddInvestor',
+      icon: 'hand-coin',
     },
     {
       title: 'Digital Talent',
-      to: 'AllSharing',
-      icon: '',
-    },
-    {
-      title: 'Startup',
-      to: 'AllClass',
-      icon: '',
+      to: '',
+      icon: 'account-network',
     },
   ];
   
@@ -56,7 +51,7 @@ import {
   
         <ScrollView style={{ backgroundColor: colors.surface }}>
           <Container mt={16}>
-            <ProgramList menus={MENUS} />
+            <RoleList menus={MENUS} />
           </Container>
         </ScrollView>
       </>

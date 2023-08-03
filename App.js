@@ -1,16 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   DefaultTheme as NavigationTheme,
   NavigationContainer,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import { initializeApp } from 'firebase/app';
-import {
-  initializeAuth,
-  getReactNativePersistence,
-} from 'firebase/auth/react-native';
-import { getFirestore } from 'firebase/firestore';
 import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
@@ -37,20 +30,9 @@ import ViewBlog from './src/pages/ViewBlog';
 import Matchmaking from './src/pages/Matchmaking';
 import AddStartup from './src/pages/AddStartup';
 import StartupDetails from './src/pages/StartupDetails';
+import AddInvestor from './src/pages/AddInvestor';
+import MatchingPage from './src/pages/MatchingPage';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyBM6mjoMCk20nk4ClG8mCaYzzUn8hcO-YQ',
-  authDomain: 'aimee-6d10e.firebaseapp.com',
-  projectId: 'aimee-6d10e',
-  storageBucket: 'aimee-6d10e.appspot.com',
-  messagingSenderId: '361835717642',
-  appId: '1:361835717642:web:47ba5cfdadbccaf867ebf3',
-};
-const firebaseApp = initializeApp(firebaseConfig);
-initializeAuth(firebaseApp, {
-  persistence: getReactNativePersistence(AsyncStorage),
-});
-export const db = getFirestore(App);
 
 const Stack = createNativeStackNavigator();
 
@@ -85,7 +67,9 @@ const StackNavigation = () => {
           <Stack.Screen name="PlayVideo" component={PlayVideo} />
           <Stack.Screen name="ViewBlog" component={ViewBlog} />
           <Stack.Screen name="AddStartup" component={AddStartup} />
+          <Stack.Screen name="AddInvestor" component={AddInvestor} />
           <Stack.Screen name="StartupDetails" component={StartupDetails} />
+          <Stack.Screen name="MatchingPage" component={MatchingPage} />
         </>
       )}
     </Stack.Navigator>
@@ -133,3 +117,6 @@ export default Bootstrap(App);
 const styles = StyleSheet.create({
   root: { flex: 1 },
 });
+
+//android: 995200027728-dvp6h2jt4gj16h125pc6pu33h9jeune5.apps.googleusercontent.com
+//ios :995200027728-33eugnud3h46tkollufarmfn66idso3s.apps.googleusercontent.com
