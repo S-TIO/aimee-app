@@ -58,7 +58,7 @@ export default MenuList;
 const styles = StyleSheet.create({
   touchableContainer: {
     paddingHorizontal: 16,
-    height: 64,
+    height: 50,
   },
   contentContainer: {
     flex: 1,

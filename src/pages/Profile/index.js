@@ -42,13 +42,17 @@ const Profile = ({ navigation }) => {
         <Container mb={8}>
           <Text style={styles.sectionHeader}>Account</Text>
         </Container>
-        <MenuList text="Account Settings" icon="account-outline" />
+        <MenuList text="Profile Settings" icon="account-outline" onPress={() =>
+            navigation.navigate('EditProfile')}/>
+        <MenuList text="Change Password" icon="lock-outline" />
+        <MenuList text="My Startup Match" icon="puzzle-check-outline" onPress={() =>
+            navigation.navigate('StartupMatch')}/>
         {/* <MenuList
           text="My Startup"
           icon="lightbulb-on-outline"
           info={<Text style={{ color: colors.primary }}>Register now !</Text>}
-        />
-        <MenuList text="Favorites" icon="bookmark-outline" />
+        /> */}
+        {/* <MenuList text="Favorites" icon="bookmark-outline" />
         <MenuList text="My Courses" icon="book-outline" />
         <MenuList text="Badge and Certificate" icon="trophy-variant-outline" /> */}
 
@@ -58,7 +62,7 @@ const Profile = ({ navigation }) => {
           <Text style={styles.sectionHeader}>General</Text>
         </Container>
         <MenuList text="Help Center" icon="help-circle-outline" />
-        <MenuList text="Terms and Privacy" icon="file-document-outline" />
+        <MenuList text="About App" icon="alert-circle-outline" />
         <MenuList
           text="Rate AIMEE App"
           icon="star-outline"

@@ -9,7 +9,7 @@ import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from '../../../firebase';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View, TouchableOpacity, Text, FlatList, Pressable, Image } from 'react-native';
-import { useTheme, TextInput, Appbar } from 'react-native-paper';
+import { useTheme, TextInput, Appbar, AppbarAction } from 'react-native-paper';
 import STARTUP from '../../_DATA/startup.json';
 import Container from '../../layout/Container';
 import StartupList from '../../views/Startup/StartupList';
@@ -78,6 +78,8 @@ const Startup = ({ navigation }) => {
           }}
         />
         <Appbar.Content title="Startup" />
+        <Appbar.Action icon="plus" size={30} onPress={() =>
+            navigation.navigate('AddStartup')}/>
       </Appbar.Header>
 
       <View
@@ -86,7 +88,7 @@ const Startup = ({ navigation }) => {
       >
         <Search />
         <FlatList
-					style={{ height: "76%" }}
+					style={{ height: "78%" }}
 					data={startuplist}
 					numColumns={1}
 					renderItem={({ item }) => (
@@ -144,7 +146,7 @@ const Startup = ({ navigation }) => {
 				/>
       </View>
 
-      <View style={styles.lockedButtonContainer}>
+      {/* <View style={styles.lockedButtonContainer}>
         <TouchableOpacity
           style={styles.lockedButton}
           onPress={() =>
@@ -162,7 +164,7 @@ const Startup = ({ navigation }) => {
             Add Startup
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       {/* Status bar */}
       <StatusBar style="auto" />

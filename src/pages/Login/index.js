@@ -18,10 +18,12 @@ import { TextInput, Button, useTheme, Colors } from 'react-native-paper';
 import SafeAreaView from '../../components/SafeAreaView';
 import { useAuth } from '../../hooks/useAuth';
 import Container from '../../layout/Container';
+import { SocialIcon } from '@rneui/themed';
 
 const Login = ({ navigation }) => {
   const { colors } = useTheme();
   const auth = useAuth();
+  // const signInWithGoogle = useAuth()
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -79,6 +81,15 @@ const Login = ({ navigation }) => {
             Login
           </Button>
         </Container>
+
+        {/* <Container mt={8}>
+          <SocialIcon
+            title="Sign In With Google"
+            button
+            type="google"
+            onPress={signInWithGoogle}
+          />
+        </Container> */}
 
         <Container mt={24}>
           <Text

@@ -32,6 +32,8 @@ import AddStartup from './src/pages/AddStartup';
 import StartupDetails from './src/pages/StartupDetails';
 import AddInvestor from './src/pages/AddInvestor';
 import MatchingPage from './src/pages/MatchingPage';
+import EditProfileScreen from './src/pages/EditProfile';
+import StartupMatch from './src/pages/StartupMatch';
 
 
 const Stack = createNativeStackNavigator();
@@ -70,6 +72,8 @@ const StackNavigation = () => {
           <Stack.Screen name="AddInvestor" component={AddInvestor} />
           <Stack.Screen name="StartupDetails" component={StartupDetails} />
           <Stack.Screen name="MatchingPage" component={MatchingPage} />
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+          <Stack.Screen name="StartupMatch" component={StartupMatch} />
         </>
       )}
     </Stack.Navigator>
@@ -117,6 +121,3 @@ export default Bootstrap(App);
 const styles = StyleSheet.create({
   root: { flex: 1 },
 });
-
-//android: 995200027728-dvp6h2jt4gj16h125pc6pu33h9jeune5.apps.googleusercontent.com
-//ios :995200027728-33eugnud3h46tkollufarmfn66idso3s.apps.googleusercontent.com

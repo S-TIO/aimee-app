@@ -62,6 +62,8 @@ const MatchingPage = ({ route }) => {
           }}
         >
           <Appbar.Content title="Matchmaking" />
+          <Appbar.Action icon="puzzle-check" size={30} onPress={() =>
+            navigation.navigate('StartupMatch')}/>
         </Appbar.Header>
         <SafeAreaView style={styles.container}>
         <View style={styles.flex}>
