@@ -14,16 +14,14 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import { TextInput, Button, useTheme, Colors } from 'react-native-paper';
-
+import { AntDesign } from '@expo/vector-icons';
 import SafeAreaView from '../../components/SafeAreaView';
 import { useAuth } from '../../hooks/useAuth';
 import Container from '../../layout/Container';
-import { SocialIcon } from '@rneui/themed';
 
 const Login = ({ navigation }) => {
   const { colors } = useTheme();
   const auth = useAuth();
-  // const signInWithGoogle = useAuth()
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -35,6 +33,10 @@ const Login = ({ navigation }) => {
     if (res?.error)
       ToastAndroid.show('Invalid username or password', ToastAndroid.SHORT);
   };
+
+  // const handleLoginWithGoogle = async () => {
+  //   await auth.signInWithGoogle();
+  // };
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -80,16 +82,17 @@ const Login = ({ navigation }) => {
           >
             Login
           </Button>
-        </Container>
 
-        {/* <Container mt={8}>
-          <SocialIcon
-            title="Sign In With Google"
-            button
-            type="google"
-            onPress={signInWithGoogle}
-          />
-        </Container> */}
+          <Text style={[styles.or, {textAlign: "center"}]}>or</Text>
+
+          <Button
+            mode="contained"
+            style={styles.loginButton}
+            onPress={auth.signIn}
+          >
+           <AntDesign name='google' size={17} color="white"/>  Login with Google
+          </Button>
+        </Container>
 
         <Container mt={24}>
           <Text
@@ -130,10 +133,11 @@ const Login = ({ navigation }) => {
 export default Login;
 
 const styles = StyleSheet.create({
+  or : {marginTop: 10, marginBottom: 0, fontSize: 20},
   imageContainer: { flex: 1, alignItems: 'center' },
   image: { height: 100, resizeMode: 'contain', right: 1 },
   passwordInput: { marginTop: 8 },
-  loginButton: { marginTop: 16 },
+  loginButton: { marginTop: 16},
   textRegister: { textAlign: 'center' },
   registerButton: { alignSelf: 'center' },
   registerButtonText: {

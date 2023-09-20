@@ -1,285 +1,367 @@
-import { doc, onSnapshot, serverTimestamp, setDoc } from "@firebase/firestore";
-import { useNavigation } from "@react-navigation/core";
-import React, { useState, useLayoutEffect, useEffect } from "react";
 import {
   View,
   Text,
+  TouchableOpacity,
+  ScrollView,
   Image,
   TextInput,
-  TouchableOpacity,
-  Alert,
-  StyleSheet,
-  Platform,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import tw from "tailwind-rn";
-import { useAuth } from '../../hooks/useAuth'; 
-import { db, storage } from '../../../firebase';
-import * as Progress from "react-native-progress";
+import React, { useState, useEffect } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
-import { getDownloadURL, ref, uploadBytesResumable } from "@firebase/storage";
+import { COLORS, FONTS } from "../../constants";
+import { useTheme } from 'react-native-paper';
+import { MaterialIcons } from "@expo/vector-icons";
+import {  db,  } from "../../../firebase"
+import { useAuth } from '../../hooks/useAuth';
+import { doc, getDoc, updateDoc, getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL, } from "firebase/firestore";
 
-const ModalScreen = () => {
-    const { user } = useAuth();
-    const navigation = useNavigation();
-    const [userProfile, setUserProfile] = useState(null);
-    const [image, setImage] = useState(null);
-    const [uploading, setUploading] = useState(false);
-    const [transferred, setTransferred] = useState(0);
-    const [job, setJob] = useState(null);
-    const [age, setAge] = useState(null);
-    const [profileCreated, setProfileCreated] = useState(false);
-    const [headerTitle, setHeaderTitle] = useState("Complete Your Profile");
-    const [buttonTitle, setButtonTitle] = useState("Complete Profile");
+
+const EditProfile = ({ navigation }) => {
+  const { colors } = useTheme();
+  const [selectedImage, setSelectedImage] = useState("");
+  const [userData, setUserData] = useState(null);
+
+  const auth = useAuth();
+  const {user, logout} = useAuth();
+
+  const handleUpdate = async () => {
+    const userRef = doc(db, "users", user.uid);
   
-    useEffect(() => {
-      (async () => {
-        if (Platform.OS !== "web") {
-          const { status } =
-            await ImagePicker.requestMediaLibraryPermissionsAsync();
-          if (status !== "granted") {
-            alert("Sorry, we need camera roll permissions to make this work!");
-          }
-        }
-      })();
-    }, []);
-  
-    const selectImage = async () => {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
+    try {
+      await updateDoc(userRef, {
+        userName: userData.userName,
+        userEmail: userData.userEmail,
+        phone: userData.phone,
+        country: userData.country,
+        city: userData.city,
+        userImg: userData.userImg,
       });
+      
+      console.log('User Updated!');
+      window.alert('Profile Updated!\nYour profile has been updated successfully.');
+    } catch (error) {
+      console.error('Error updating user:', error);
+      window.alert('Error updating your profile. Please try again.');
+    }
+  };
+
+
+  const getUser = async () => {
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      const documentSnapshot = await getDoc(userRef);
   
-      console.log(result);
-  
-      if (!result.cancelled) {
-        setImage(result.uri);
+      if (documentSnapshot.exists()) {
+        console.log('User Data', documentSnapshot.data());
+        setUserData(documentSnapshot.data());
       }
-    };
+    } catch (error) {
+      // Handle any errors here
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  console.log(selectedImage);
+
+  const handleImageSelection = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+      const name = result.assets[0].uri.split("/").pop();
+      await uploadToFirebase(result.assets[0].uri, name, (v) =>
+          console.log(v));
+    }
+  };
+
+  async function uploadToFirebase (uri, name, onProgress) {
+    const fetchResponse = await fetch(uri);
+    const theBlob = await fetchResponse.blob();
   
-    const uploadImage = async () => {
-      setUploading(true);
-      const blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-          resolve(xhr.response);
-        };
-        xhr.onerror = function () {
-          reject(new TypeError("Network request failed"));
-        };
-        xhr.responseType = "blob";
-        xhr.open("GET", image, true);
-        xhr.send(null);
-      });
+    const imageRef = ref(getStorage(), `images/${name}`);
   
-      const timestamp = new Date().toISOString();
-      const filename = user.displayName + timestamp;
-      const storageRef = ref(storage, filename);
+    const uploadTask = uploadBytesResumable(imageRef, theBlob);
   
-      const uploadTask = uploadBytesResumable(storageRef, blob);
-  
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          // Observe state change events such as progress, pause, and resume
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          setTransferred(progress);
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-          }
-        },
-        (error) => {
-          setUploading(false);
-          Alert.alert(
-            "Image Upload Unsuccessful",
-            "Please try uploading the profile image again."
-          );
-        },
-        () => {
-          // Handle successful uploads on complete
-          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-          setUploading(false);
-          Alert.alert("Image Upload Successful");
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            console.log("File available at", downloadURL);
-            setImage(downloadURL);
-          });
-        }
-      );
-    };
-  
-    const incompleteForm = !image || !job || !age;
-  
-    useLayoutEffect(
-      () =>
-        onSnapshot(doc(db, "users", user.uid), (snapshot) => {
-          if (snapshot.exists()) {
-            setImage(
-              snapshot._document.data.value.mapValue.fields.photoURl.stringValue
-            );
-            setJob(snapshot._document.data.value.mapValue.fields.job.stringValue);
-            setAge(snapshot._document.data.value.mapValue.fields.age.stringValue);
-            setProfileCreated(true);
-            setHeaderTitle("Update Your Profile");
-            setButtonTitle("Update Profile");
-          }
-        }),
-      []
-    );
-  
-    useEffect(
-      () =>
-        navigation.addListener("beforeRemove", (e) => {
-          if (profileCreated) return;
-          e.preventDefault();
-          Alert.alert(
-            "Process Incomplete",
-            "Please complete your profile to proceed further."
-          );
-        }),
-      [navigation, profileCreated]
-    );
-  
-    const updateUserProfile = () => {
-      setDoc(doc(db, "users", user.uid), {
-        id: user.uid,
-        displayName: user.displayName,
-        photoURl: image,
-        job: job,
-        age: age,
-        timestamp: serverTimestamp(),
-      })
-        .then(() => {
-          navigation.navigate("Home");
-        })
-        .catch((error) => {
-          alert(error.message);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        onProgress && onProgress(progress);
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+      },
+      () => {
+      getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+        setImage ("");
+        await updateDoc(doc(db, "users", user.uid), {
+          userImg: downloadURL,
         });
-    };
-  
-    return (
-      <View style={tw("flex-1")}>
-        <Header title={headerTitle} />
-        <ScrollView>
-          <View style={tw("items-center pt-1")}>
-            <Text style={tw("text-xl text-gray-500 p-2 font-bold")}>
-              Welcome, {user.displayName}!
-            </Text>
-            <Text style={tw("text-center p-4 font-bold text-red-400")}>
-              Step 1: The Profile Pic
-            </Text>
-            <TouchableOpacity style={[styles.selectButton]} onPress={selectImage}>
-              <Text style={styles.buttonText}>Pick an image</Text>
-            </TouchableOpacity>
-          </View>
-  
-          <View style={styles.imageContainer}>
-            {image !== null ? (
-              <Image source={{ uri: image }} style={styles.imageBox} />
-            ) : null}
-            {uploading ? (
-              <View style={styles.progressBarContainer}>
-                <Progress.Bar progress={transferred} width={300} />
-              </View>
-            ) : (
-              <TouchableOpacity style={styles.uploadButton} onPress={uploadImage}>
-                <Text style={styles.buttonText}>Upload image</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-          <View style={tw("flex-1 items-center pt-1 pb-20")}>
-            <Text style={tw("text-center p-4 font-bold text-red-400")}>
-              Step 2: The Job
-            </Text>
-            <TextInput
-              value={job}
-              onChangeText={setJob}
-              style={tw("text-center text-xl pb-2")}
-              placeholder="Enter your occupation"
-            />
-            <Text style={tw("text-center p-4 font-bold text-red-400")}>
-              Step 3: The Age
-            </Text>
-            <TextInput
-              value={age}
-              onChangeText={setAge}
-              style={tw("text-center text-xl pb-3")}
-              placeholder="Enter your age"
-              maxLength={2}
-              keyboardType="numeric"
-            />
-          </View>
-  
-          <View style={tw("flex-1 items-center  pt-1 mb-10")}>
-            <TouchableOpacity
-              disabled={incompleteForm}
-              style={[
-                tw("w-64 p-3 rounded-xl  absolute bottom-1 bg-red-400"),
-                incompleteForm ? tw("bg-gray-400") : tw("bg-red-400"),
-              ]}
-              onPress={updateUserProfile}
-            >
-              <Text style={tw("text-center text-white text-xl")}>
-                {buttonTitle}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </View>
+      });
+      }
     );
   };
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: "center",
-      backgroundColor: "#bbded6",
-    },
-    selectButton: {
-      borderRadius: 5,
-      width: 150,
-      height: 50,
-      backgroundColor: "#000000",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    uploadButton: {
-      borderRadius: 5,
-      width: 150,
-      height: 50,
-      backgroundColor: "#FF5864",
-      alignItems: "center",
-      justifyContent: "center",
-      marginTop: 20,
-    },
-    buttonText: {
-      color: "white",
-      fontSize: 18,
-      fontWeight: "bold",
-    },
-    imageContainer: {
-      marginTop: 30,
-      marginBottom: 50,
-      alignItems: "center",
-    },
-    progressBarContainer: {
-      marginTop: 20,
-    },
-    imageBox: {
-      width: 300,
-      height: 300,
-    },
-  });
-  
-  export default ModalScreen;
-  
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  return (
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: COLORS.white,
+        paddingHorizontal: 22,
+      }}
+    >
+      <View
+        style={{
+          marginHorizontal: 12,
+          flexDirection: "row",
+          justifyContent: "center",
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            position: "absolute",
+            left: 0,
+          }}
+        >
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={24}
+            color={COLORS.black}
+          />
+        </TouchableOpacity>
+
+        <Text style={{ ...FONTS.h3 }}>Edit Profile</Text>
+      </View>
+
+      <ScrollView>
+        <View
+          style={{
+            alignItems: "center",
+            marginVertical: 22,
+          }}
+        >
+          <TouchableOpacity onPress={handleImageSelection}>
+            <Image
+              source={{ uri: selectedImage
+                ? selectedImage
+                : userData
+                ? userData.userImg ||
+                  'https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg'
+                : 'https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg',
+            }}
+              style={{
+                height: 170,
+                width: 170,
+                borderRadius: 85,
+                borderWidth: 2,
+                borderColor: colors.primary,
+              }}
+            />
+
+            <View
+              style={{
+                position: "absolute",
+                bottom: 0,
+                right: 10,
+                zIndex: 9999,
+              }}
+            >
+              <MaterialIcons
+                name="photo-camera"
+                size={32}
+                color={colors.primary}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View>
+          <View
+            style={{
+              flexDirection: "column",
+              marginBottom: 6,
+            }}
+          >
+            <Text style={{ ...FONTS.h4 }}>Name</Text>
+            <View
+              style={{
+                height: 44,
+                width: "100%",
+                borderColor: COLORS.secondaryGray,
+                borderWidth: 1,
+                borderRadius: 4,
+                marginVertical: 6,
+                justifyContent: "center",
+                paddingLeft: 8,
+              }}
+            >
+              <TextInput
+                placeholder="Name"
+                placeholderTextColor="#666666"
+                autoCorrect={false}
+                value={userData ? userData.userName : ''}
+                onChangeText={(txt) => setUserData({...userData, userName: txt})}
+              />
+            </View>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "column",
+              marginBottom: 6,
+            }}
+          >
+            <Text style={{ ...FONTS.h4 }}>Email</Text>
+            <View
+              style={{
+                height: 44,
+                width: "100%",
+                borderColor: COLORS.secondaryGray,
+                borderWidth: 1,
+                borderRadius: 4,
+                marginVertical: 6,
+                justifyContent: "center",
+                paddingLeft: 8,
+              }}
+            >
+              <TextInput
+                placeholder="Email"
+                placeholderTextColor="#666666"
+                autoCorrect={false}
+                value={userData ? userData.userEmail : ''}
+                onChangeText={(txt) => setUserData({...userData, userEmail: txt})}
+              />
+            </View>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "column",
+              marginBottom: 6,
+            }}
+          >
+            <Text style={{ ...FONTS.h4 }}>Phone</Text>
+            <View
+              style={{
+                height: 44,
+                width: "100%",
+                borderColor: COLORS.secondaryGray,
+                borderWidth: 1,
+                borderRadius: 4,
+                marginVertical: 6,
+                justifyContent: "center",
+                paddingLeft: 8,
+              }}
+            >
+              <TextInput
+                placeholder="Phone Number"
+                placeholderTextColor="#666666"
+                autoCorrect={false}
+                value={userData ? userData.phone : ''}
+                onChangeText={(txt) => setUserData({...userData, phone: txt})}
+              />
+            </View>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "column",
+              marginBottom: 6,
+            }}
+          >
+            <Text style={{ ...FONTS.h4 }}>Country</Text>
+            <View
+              style={{
+                height: 44,
+                width: "100%",
+                borderColor: COLORS.secondaryGray,
+                borderWidth: 1,
+                borderRadius: 4,
+                marginVertical: 6,
+                justifyContent: "center",
+                paddingLeft: 8,
+              }}
+            >
+              <TextInput
+                placeholder="Country"
+                placeholderTextColor="#666666"
+                autoCorrect={false}
+                value={userData ? userData.country : ''}
+                onChangeText={(txt) => setUserData({...userData, country: txt})}
+              />
+            </View>
+          </View>
+        </View>
+
+        <View
+          style={{
+            flexDirection: "column",
+            marginBottom: 6,
+          }}
+        >
+          <Text style={{ ...FONTS.h4 }}>City</Text>
+          <View
+            style={{
+              height: 44,
+              width: "100%",
+              borderColor: COLORS.secondaryGray,
+              borderWidth: 1,
+              borderRadius: 4,
+              marginVertical: 6,
+              justifyContent: "center",
+              paddingLeft: 8,
+            }}
+          >
+            <TextInput
+              placeholder="City"
+              placeholderTextColor="#666666"
+              autoCorrect={false}
+              value={userData ? userData.city : ''}
+              onChangeText={(txt) => setUserData({...userData, city: txt})}
+            />
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={{
+            backgroundColor: colors.primary,
+            height: 44,
+            borderRadius: 6,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={handleUpdate}
+        >
+          <Text
+            style={{
+              ...FONTS.body3,
+              color: COLORS.white,
+            }}
+          >
+            Save Change
+          </Text>
+        </TouchableOpacity>
+
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+export default EditProfile;

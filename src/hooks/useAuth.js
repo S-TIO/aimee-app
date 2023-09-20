@@ -11,6 +11,9 @@ import {
 } from 'firebase/auth/react-native';
 import { useEffect, useState, useContext, createContext } from 'react';
 import * as Google from 'expo-auth-session/providers/google';
+import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore"; 
+import { db } from '../../firebase';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const authContext = createContext();
 
@@ -23,15 +26,6 @@ const useAuth = () => {
   return useContext(authContext);
 };
 
-// const config = Google.useAuthRequest({
-//   androidClientId:
-//     "361835717642-dfdfguumrkt9p5341h93te9kek7d1a82.apps.googleusercontent.com",
-//   iosClientId:
-//     "361835717642-o5qjbprfu3o4kh9rpb6v6sljl9qdp3o8.apps.googleusercontent.com",
-//   expoClientId:
-//     "361835717642-7pjg9p993a6a90p3ub0gee6rhf44to2n.apps.googleusercontent.com",
-// });
-
 const useProvideAuth = () => {
   const auth = getAuth(getApp());
   auth.setPersistence(getReactNativePersistence(AsyncStorage));
@@ -40,6 +34,7 @@ const useProvideAuth = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
+  
   // const signInWithGoogle = async () => {
   // try{
   //   setLoading(true);
@@ -63,6 +58,28 @@ const useProvideAuth = () => {
   //     }
   // };
 
+  const signIn = async () => {
+    try {
+      setLoading(true);
+
+      const { idToken } = await GoogleSignin.signIn();
+      const credential = auth.GoogleAuthProvider.credential(idToken);
+      const user = await auth().signInWithCredential(credential);
+      setUser(user.user)
+
+      setDoc(doc(db, "users", auth.currentUser.uid), {
+        userName: displayName,
+        userEmail: email,
+        createdAt: serverTimestamp(),
+        userImg: null,
+      });
+
+    } catch (error) {
+      setLoading(false);
+      return { error };
+    }
+  };
+
   const login = async (email, password) => {
     try {
       setLoading(true);
@@ -72,7 +89,7 @@ const useProvideAuth = () => {
         email,
         password
       );
-      setUser(credential.user);
+      setUser(credential.user)
     } catch (error) {
       setLoading(false);
       return { error };
@@ -101,9 +118,18 @@ const useProvideAuth = () => {
         password
       );
       await updateProfile(auth.currentUser, { displayName });
-
+     
       setUser(credential.user);
-    } catch (error) {
+      
+
+      setDoc(doc(db, "users", auth.currentUser.uid), {
+        userName: displayName,
+        userEmail: email,
+        createdAt: serverTimestamp(),
+        userImg: null,
+      });
+
+      } catch (error) {
       setLoading(false);
 
       return { error };
@@ -126,7 +152,7 @@ const useProvideAuth = () => {
     return () => unsubscribe();
   }, []);
 
-  return { user, loading, initialized, login, logout, register };
+  return { user, loading, initialized, login, logout, register, signIn };
 };
 
 export { ProvideAuth, useAuth };

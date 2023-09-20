@@ -12,7 +12,7 @@ import {
   Colors,
 } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
+import { IntlProvider } from "react-intl-number-format";
 import { ProvideAuth, useAuth } from './src/hooks/useAuth';
 import AllClass from './src/pages/AllClass';
 import AllSeminar from './src/pages/AllSeminar';
@@ -32,9 +32,18 @@ import AddStartup from './src/pages/AddStartup';
 import StartupDetails from './src/pages/StartupDetails';
 import AddInvestor from './src/pages/AddInvestor';
 import MatchingPage from './src/pages/MatchingPage';
-import EditProfileScreen from './src/pages/EditProfile';
+import EditProfile from './src/pages/EditProfile';
 import StartupMatch from './src/pages/StartupMatch';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
+GoogleSignin.configure({
+  androidClientId:
+    "361835717642-dfdfguumrkt9p5341h93te9kek7d1a82.apps.googleusercontent.com",
+  iosClientId:
+    "361835717642-o5qjbprfu3o4kh9rpb6v6sljl9qdp3o8.apps.googleusercontent.com",
+  expoClientId:
+    "361835717642-7pjg9p993a6a90p3ub0gee6rhf44to2n.apps.googleusercontent.com",
+});
 
 const Stack = createNativeStackNavigator();
 
@@ -42,6 +51,7 @@ const StackNavigation = () => {
   const auth = useAuth();
 
   return (
+    <IntlProvider>
     <Stack.Navigator
       initialRouteName="Login"
       screenOptions={{ headerShown: false }}
@@ -72,11 +82,12 @@ const StackNavigation = () => {
           <Stack.Screen name="AddInvestor" component={AddInvestor} />
           <Stack.Screen name="StartupDetails" component={StartupDetails} />
           <Stack.Screen name="MatchingPage" component={MatchingPage} />
-          <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+          <Stack.Screen name="EditProfile" component={EditProfile} />
           <Stack.Screen name="StartupMatch" component={StartupMatch} />
         </>
       )}
     </Stack.Navigator>
+    </IntlProvider>
   );
 };
 

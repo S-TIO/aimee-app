@@ -2,6 +2,7 @@
   "expo": {
     "name": "AIMEE",
     "slug": "aimee-app",
+    "jsEngine": "hermes",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,27 +13,33 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/eb23e5e0-f91d-45c7-9221-c2b8b06a784f"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.aimee"
+      "bundleIdentifier": "com.aimee",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
-      "package": "com.aimee"
+      "package": "com.aimee",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "plugins": ["@react-native-google-signin/google-signin"],
     "extra": {
       "eas": {
         "projectId": "eb23e5e0-f91d-45c7-9221-c2b8b06a784f"
       }
     },
-    "owner": "sulistio5681"
+    "owner": "sulistio5681",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    }
   }
 }
-
