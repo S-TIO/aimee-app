@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "361835717642",
+    "project_id": "aimee-6d10e",
+    "storage_bucket": "aimee-6d10e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361835717642:android:09d717b26d5d54af67ebf3",
+        "android_client_info": {
+          "package_name": "com.aimee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "361835717642-dfdfguumrkt9p5341h93te9kek7d1a82.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aimee",
+            "certificate_hash": "f2a52c7a074fc0b0a5774d048bc2d7278729bfdc"
+          }
+        },
+        {
+          "client_id": "361835717642-b6m0q4okrda0j9f6rt7il544fsasgkjf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvUszmY-KWdpr3CcxgR4d8A0slgnXOd5U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "361835717642-5o7baon7h94nq0updris1s5l5km3v4gq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "361835717642-o5qjbprfu3o4kh9rpb6v6sljl9qdp3o8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.aimee"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

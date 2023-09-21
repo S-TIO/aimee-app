@@ -12,12 +12,13 @@ import * as ImagePicker from "expo-image-picker";
 import { COLORS, FONTS } from "../../constants";
 import { useTheme } from 'react-native-paper';
 import { MaterialIcons } from "@expo/vector-icons";
-import {  db,  } from "../../../firebase"
+import {  db, fbStorage  } from "../../../firebase"
 import { useAuth } from '../../hooks/useAuth';
-import { doc, getDoc, updateDoc, getStorage,
+import { doc, getDoc, updateDoc,
   ref,
   uploadBytesResumable,
   getDownloadURL, } from "firebase/firestore";
+import { any } from "prop-types";
 
 
 const EditProfile = ({ navigation }) => {
@@ -79,17 +80,15 @@ const EditProfile = ({ navigation }) => {
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
-      const name = result.assets[0].uri.split("/").pop();
-      await uploadToFirebase(result.assets[0].uri, name, (v) =>
-          console.log(v));
+      await uploadToFirebase(result.assets[0].uri, "image");
     }
   };
 
-  async function uploadToFirebase (uri, name, onProgress) {
+  async function uploadToFirebase (uri, fileType) {
     const fetchResponse = await fetch(uri);
     const theBlob = await fetchResponse.blob();
   
-    const imageRef = ref(getStorage(), `images/${name}`);
+    const imageRef = ref(fbStorage, `images/` + new Date().getTime());
   
     const uploadTask = uploadBytesResumable(imageRef, theBlob);
   
@@ -98,21 +97,31 @@ const EditProfile = ({ navigation }) => {
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        onProgress && onProgress(progress);
+        console.log("Upload is" + progress + "% done")
       },
       (error) => {
         // Handle unsuccessful uploads
       },
       () => {
       getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+        console.log("File available at", downloadURL);
+        await updateImage(downloadURL);
         setImage ("");
-        await updateDoc(doc(db, "users", user.uid), {
-          userImg: downloadURL,
-        });
       });
       }
     );
   };
+
+  async function updateImage() {
+    try {
+      const docRef = await updateDoc(doc(db, "users", user.uid), {
+        userImg,
+      })
+      console.log("Update Success", docRef.id);
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   useEffect(() => {
     getUser();

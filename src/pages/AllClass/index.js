@@ -1,7 +1,7 @@
 import { SectionList, StyleSheet } from 'react-native';
 import { Appbar, useTheme } from 'react-native-paper';
 
-import onlineClass from '../../_DATA/online-class.json';
+// import onlineClass from '../../_DATA/online-class.json';
 import VerticalSection from '../../components/VerticalSection';
 
 const createVid = (id, title, description) => {
@@ -14,6 +14,22 @@ const createVid = (id, title, description) => {
     type: 'VIDEO',
   };
 };
+
+const [onlineClass, setOnlineClass] = useState([]);
+
+useEffect(() => {
+  const dbRef = collection(db, "OnlineClass");
+
+  const q = query(dbRef, orderBy("title", "asc"));
+
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      setOnlineClass(
+          querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+  });
+
+  return unsubscribe;
+}, []);
 
 const ONLINECLASS = onlineClass.map((vid) => {
   return createVid(vid.id, vid.title, vid.description);
