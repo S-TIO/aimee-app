@@ -34,10 +34,6 @@ const Login = ({ navigation }) => {
       ToastAndroid.show('Invalid username or password', ToastAndroid.SHORT);
   };
 
-  // const handleLoginWithGoogle = async () => {
-  //   await auth.signInWithGoogle();
-  // };
-
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       setStatusBarBackgroundColor(colors.surface);

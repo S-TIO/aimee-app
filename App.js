@@ -37,6 +37,8 @@ import StartupMatch from './src/pages/StartupMatch';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 GoogleSignin.configure({
+  webClientId:
+    "361835717642-b6m0q4okrda0j9f6rt7il544fsasgkjf.apps.googleusercontent.com",
   androidClientId:
     "361835717642-dfdfguumrkt9p5341h93te9kek7d1a82.apps.googleusercontent.com",
   iosClientId:
