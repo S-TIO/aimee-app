@@ -7,33 +7,48 @@ import {
 import { Appbar, useTheme } from 'react-native-paper';
 import Swiper from 'react-native-deck-swiper';;
 import { db } from '../../../firebase';
-import { collection, query, onSnapshot, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
+import { useAuth } from '../../hooks/useAuth';
 
 
 const MatchingPage = ({ route }) => {
   const {
-    investorName,
-    investorSektorIndustri,
-    investorPendanaan,
-    investorTahapPerkembangan,
-    investorContact,
+    matchName,
+    matchSektorIndustri,
+    matchPendanaan,
+    matchTahapPerkembangan,
+    matchModelBisnis,
+    matchContact,
   } = route.params;
   const { colors } = useTheme();
   const [startup, setStartup] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const swipeRef = useRef(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     let unsub;
     const fetchCards = async () => {
+      const matches = await getDocs(
+        collection(db, "users", user.id, "match")
+      ).then((snapshot) => snapshot.docs.map((doc) => doc.id));
+
+      const skipped = await getDocs(
+        collection(db, "users", user.id, "skipped")
+      ).then((snapshot) => snapshot.docs.map((doc) => doc.id));
+
+      const matchedIds = matches.length > 0 ? matches : ["test"];
+      const skippedIds = skipped.length > 0 ? skipped : ["test"];
+
+      console.log([...matchedIds, ...skippedIds]);
 
       unsub = onSnapshot(
         query(
           collection(db, "StartupList"),
-          where('sektorIndustri', '==', investorSektorIndustri),
-          where('tahapPerkembangan', '==', investorTahapPerkembangan),
+          where('sektorIndustri', '==', matchSektorIndustri),
+          where('modelBisnis', '==', matchModelBisnis),
         ),
         (snapshot) => {
           if (snapshot.empty) {
@@ -54,6 +69,17 @@ const MatchingPage = ({ route }) => {
     fetchCards();
     return unsub;
   }, []);
+
+  const swipeLeftHandler = async (index) => {
+    if(!startup[index]) return;
+
+    const userSkipped = startup[index]
+    console.log(`${user.name} passed Left on ${userSkipped.name}`);
+
+    setDoc(doc(db, 'users', user.id, "skipped", userSkipped.id), userSkipped)
+
+  }
+
     return (
       <>
         <Appbar.Header
@@ -100,6 +126,7 @@ const MatchingPage = ({ route }) => {
             verticalSwipe={false}
             onSwipedLeft={() => {
               console.log("Skip")
+              swipeLeftHandler(index)
             }}
             onSwipedRight={()=> {
               console.log("Yeah")

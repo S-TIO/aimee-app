@@ -76,7 +76,6 @@ export default function UpdateDetail({ route, navigation }) {
             quality: 1,
         });
 
-        console.log(result);
 
         if (!result.canceled) {
             await uploadToFirebase(result.assets[0].uri);
@@ -104,7 +103,6 @@ export default function UpdateDetail({ route, navigation }) {
             },
             () => {
             getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            console.log("File available at", downloadURL);
             setImage (downloadURL);
             window.alert("Upload completed successfully!");
             });

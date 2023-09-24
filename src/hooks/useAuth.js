@@ -56,7 +56,7 @@ const useProvideAuth = () => {
           createdAt: serverTimestamp(),
           userImg: user.photoURL,
         })
-      }
+      };
     
     } catch (error) {
       setLoading(false);
@@ -75,6 +75,20 @@ const useProvideAuth = () => {
         password
       );
       setUser(credential.user)
+
+      const updateStatus = await updateUser (auth.currentUser.uid, {
+        updatedAt: serverTimestamp(),
+      });
+
+      if (updateStatus.error) {
+        await saveUser (auth.currentUser.uid, {
+          userName: auth.currentUser.displayName,
+          userEmail: auth.currentUser.email,
+          createdAt: serverTimestamp(),
+          userImg: auth.currentUser.photoURL,
+        })
+      };
+
     } catch (error) {
       setLoading(false);
       return { error };

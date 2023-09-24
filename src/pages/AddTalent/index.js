@@ -5,14 +5,15 @@ import {
   } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TextInput, Button, useTheme, Appbar } from 'react-native-paper';
-import { collection, addDoc } from "firebase/firestore"; 
-import { db } from '../../../firebase';
 import Container from '../../layout/Container';
 import DropDown from "react-native-paper-dropdown";
-import MatchingPage from '../MatchingPage';
+import { useAuth } from '../../hooks/useAuth';
+import { saveTalent, updateTalent } from '../../components/User';
+import { serverTimestamp } from 'firebase/firestore';
 
 const AddTalent = ({ navigation }) => {
   const { colors } = useTheme();
+  const { user } = useAuth();
   const [showDropDown1, setShowDropDown1] = useState(false);
   const [showDropDown2, setShowDropDown2] = useState(false);
   const [showDropDown3, setShowDropDown3] = useState(false);
@@ -59,26 +60,32 @@ const AddTalent = ({ navigation }) => {
   const [keahlian, setKeahlian] = useState('');
   const [contact, setContact] = useState('');
 
-  function create () {
-    addDoc(collection(db, "TalentList"), {
-      name: name,
-      sektorIndustri : sektorIndustri,
-      tahapPerkembangan : tahapPerkembangan,
-      modelBisnis : modelBisnis,
-      keahlian : keahlian,
-      contact : contact
-    }).then(() => {
-      setName('');
-      setSektorIndustri('');
-      setTahapPerkembangan('');
-      setModelBisnis('');
-      setKeahlian('');
-      setContact('');
-      Keyboard.dismiss;
-      console.log('Data Submitted');
-    }).catch((error) => {
+  const create = async () => {
+    try {
+      const updateStatus = await updateTalent(user.uid, {
+        name: name,
+        sektorIndustri : sektorIndustri,
+        tahapPerkembangan : tahapPerkembangan,
+        modelBisnis : modelBisnis,
+        keahlian : keahlian,
+        contact : contact,
+        updatedAt: serverTimestamp(),
+      });
+  
+      if (updateStatus.error) {
+        await saveTalent (user.uid, {
+          name: name,
+          sektorIndustri : sektorIndustri,
+          tahapPerkembangan : tahapPerkembangan,
+          modelBisnis : modelBisnis,
+          keahlian : keahlian,
+          contact : contact,
+          createdAt : serverTimestamp(),
+        });
+      };
+    } catch(error) {
       console.log(error);
-    });
+    };
   }
 
   return (
@@ -153,13 +160,14 @@ const AddTalent = ({ navigation }) => {
 
           <Button
             onPress={() => {
-              // create();
+              create();
               navigation.navigate("MatchingPage", {
-                talentName: name,
-                talentSektorIndustri: sektorIndustri,
-                talentKeahlian: keahlian,
-                talentTahapPerkembangan: tahapPerkembangan,
-                talentContact: contact,
+                matchName: name,
+                matchSektorIndustri: sektorIndustri,
+                matchKeahlian: keahlian,
+                matchModelBisnis: modelBisnis,
+                matchTahapPerkembangan: tahapPerkembangan,
+                matchContact: contact,
               });
             }}
             mode="contained"

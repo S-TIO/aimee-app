@@ -5,14 +5,15 @@ import {
   } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TextInput, Button, useTheme, Appbar } from 'react-native-paper';
-import { collection, addDoc } from "firebase/firestore"; 
-import { db } from '../../../firebase';
 import Container from '../../layout/Container';
 import DropDown from "react-native-paper-dropdown";
-import MatchingPage from '../MatchingPage';
+import { useAuth } from '../../hooks/useAuth';
+import { serverTimestamp } from "firebase/firestore"; 
+import { saveInvestor, updateInvestor } from '../../components/User';
 
 const AddInvestor = ({ navigation }) => {
   const { colors } = useTheme();
+  const { user } = useAuth();
   const [showDropDown1, setShowDropDown1] = useState(false);
   const [showDropDown2, setShowDropDown2] = useState(false);
   const [showDropDown3, setShowDropDown3] = useState(false);
@@ -50,26 +51,32 @@ const AddInvestor = ({ navigation }) => {
   const [pendanaan, setPendanaan] = useState('');
   const [contact, setContact] = useState('');
 
-  function create () {
-    addDoc(collection(db, "InvestorList"), {
-      name: name,
-      sektorIndustri : sektorIndustri,
-      tahapPerkembangan : tahapPerkembangan,
-      modelBisnis : modelBisnis,
-      pendanaan : Number(pendanaan),
-      contact : contact
-    }).then(() => {
-      setName('');
-      setSektorIndustri('');
-      setTahapPerkembangan('');
-      setModelBisnis('');
-      setPendanaan('');
-      setContact('');
-      Keyboard.dismiss;
-      console.log('Data Submitted');
-    }).catch((error) => {
+  const create = async () => {
+    try {
+      const updateStatus = await updateInvestor(user.uid, {
+        name: name,
+        sektorIndustri : sektorIndustri,
+        tahapPerkembangan : tahapPerkembangan,
+        modelBisnis : modelBisnis,
+        pendanaan : pendanaan,
+        contact : contact,
+        updatedAt: serverTimestamp(),
+      });
+  
+      if (updateStatus.error) {
+        await saveInvestor (user.uid, {
+          name: name,
+          sektorIndustri : sektorIndustri,
+          tahapPerkembangan : tahapPerkembangan,
+          modelBisnis : modelBisnis,
+          pendanaan : pendanaan,
+          contact : contact,
+          createdAt : serverTimestamp(),
+        });
+      };
+    } catch(error) {
       console.log(error);
-    });
+    };
   }
 
   return (
@@ -127,6 +134,7 @@ const AddInvestor = ({ navigation }) => {
           <TextInput
             label="Besaran Investasi"
             placeholder='20000000'
+            keyboardType='numeric'
             value={pendanaan}
             onChangeText={setPendanaan}
             mode="outlined"
@@ -141,13 +149,14 @@ const AddInvestor = ({ navigation }) => {
 
           <Button
             onPress={() => {
-              // create();
+              create();
               navigation.navigate("MatchingPage", {
-                investorName: name,
-                investorSektorIndustri: sektorIndustri,
-                investorPendanaan: pendanaan,
-                investorTahapPerkembangan: tahapPerkembangan,
-                investorContact: contact,
+                matchName: name,
+                matchSektorIndustri: sektorIndustri,
+                matchModelBisnis: modelBisnis,
+                matchPendanaan: pendanaan,
+                matchTahapPerkembangan: tahapPerkembangan,
+                matchContact: contact,
               });
             }}
             mode="contained"

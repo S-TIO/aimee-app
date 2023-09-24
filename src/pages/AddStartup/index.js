@@ -5,7 +5,7 @@ import {
   } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { TextInput, Button, useTheme, Appbar } from 'react-native-paper';
-import { collection, addDoc } from "firebase/firestore"; 
+import { collection, addDoc, updateDoc } from "firebase/firestore"; 
 import { db, fbStorage } from '../../../firebase';
 import Container from '../../layout/Container';
 import DropDown from "react-native-paper-dropdown";
@@ -68,20 +68,29 @@ const AddStartup = ({ navigation }) => {
   const [pendanaan, setPendanaan] = useState('');
   const [contact, setContact] = useState('');
 
+  const collectionRef = collection(db, "StartupList");
+
+  const data = {
+    name: name,
+    description: description,
+    location: location,
+    sektorIndustri: sektorIndustri,
+    tahapPerkembangan: tahapPerkembangan,
+    ukuranTim: ukuranTim,
+    modelBisnis: modelBisnis,
+    keahlian: keahlian,
+    pendanaan: pendanaan,
+    image: image,
+    contact: contact,
+  };
+
   function create () {
-    addDoc(collection(db, "StartupList"), {
-      name: name,
-      description: description,
-      location: location,
-      sektorIndustri : sektorIndustri,
-      tahapPerkembangan : tahapPerkembangan,
-      ukuranTim : ukuranTim,
-      modelBisnis : modelBisnis,
-      keahlian : keahlian,
-      pendanaan : pendanaan,
-      image : image,
-      contact : contact
-    }).then(() => {
+    addDoc(collectionRef, data)
+  .then((docRef) => {
+    const id = docRef.id;
+    const updatedData = { ...data, id: id };
+    return updateDoc(docRef, updatedData);
+  }).then(() => {
       setName('');
       setDescription('');
       setLocation('');
@@ -94,11 +103,9 @@ const AddStartup = ({ navigation }) => {
       setImage('');
       setContact('');
       Keyboard.dismiss;
-      console.log('Data Submitted');
       window.alert("Data Submitted Successfully!");
     }).catch((error) => {
       window.alert('Error submitting your data. Please try again.');
-      console.log(error);
     });
   }
 
@@ -110,7 +117,6 @@ const AddStartup = ({ navigation }) => {
       quality: 1,
     });
 
-    console.log(result);
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
@@ -139,7 +145,6 @@ const AddStartup = ({ navigation }) => {
       },
       () => {
       getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-        console.log("File available at", downloadURL);
         setImage (downloadURL);
         window.alert("Upload completed successfully!");
       });

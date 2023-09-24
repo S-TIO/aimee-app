@@ -44,11 +44,8 @@ const EditProfile = ({ navigation }) => {
         city: userData.city,
         userImg: image,
       });
-      console.log(image)
-      console.log('User Updated!');
       window.alert('Profile Updated!\nYour profile has been updated successfully.');
     } catch (error) {
-      console.error('Error updating user:', error);
       window.alert('Error updating your profile. Please try again.');
     }
   };
@@ -60,7 +57,6 @@ const EditProfile = ({ navigation }) => {
       const documentSnapshot = await getDoc(userRef);
   
       if (documentSnapshot.exists()) {
-        console.log('User Data', documentSnapshot.data());
         setUserData(documentSnapshot.data());
       }
     } catch (error) {
@@ -69,8 +65,6 @@ const EditProfile = ({ navigation }) => {
     }
   };
 
-  console.log(selectedImage);
-
   const handleImageSelection = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -78,8 +72,6 @@ const EditProfile = ({ navigation }) => {
       aspect: [4, 4],
       quality: 1,
     });
-
-    console.log(result);
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
@@ -114,20 +106,6 @@ const EditProfile = ({ navigation }) => {
       }
     );
   };
-
-  // async function updateImage() {
-  //   const userImg = user.userImg;
-  //   try {
-  //     const docRef = await updateDoc(doc(db, "users", user.uid), {
-  //       userImg,
-  //     })
-  //     console.log("Update Success", docRef.id);
-  //     console.log(user)
-  //   } catch (error) {
-  //     console.log(user)
-  //     console.log(error)
-  //   }
-  // }
 
   useEffect(() => {
     getUser();
