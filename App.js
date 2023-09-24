@@ -31,9 +31,11 @@ import Matchmaking from './src/pages/Matchmaking';
 import AddStartup from './src/pages/AddStartup';
 import StartupDetails from './src/pages/StartupDetails';
 import AddInvestor from './src/pages/AddInvestor';
+import AddTalent from './src/pages/AddTalent';
 import MatchingPage from './src/pages/MatchingPage';
 import EditProfile from './src/pages/EditProfile';
 import StartupMatch from './src/pages/StartupMatch';
+import UpdateDetail from './src/pages/UpdateStartupDetail';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 GoogleSignin.configure({
@@ -82,10 +84,12 @@ const StackNavigation = () => {
           <Stack.Screen name="ViewBlog" component={ViewBlog} />
           <Stack.Screen name="AddStartup" component={AddStartup} />
           <Stack.Screen name="AddInvestor" component={AddInvestor} />
+          <Stack.Screen name="AddTalent" component={AddTalent} />
           <Stack.Screen name="StartupDetails" component={StartupDetails} />
           <Stack.Screen name="MatchingPage" component={MatchingPage} />
           <Stack.Screen name="EditProfile" component={EditProfile} />
           <Stack.Screen name="StartupMatch" component={StartupMatch} />
+          <Stack.Screen name="UpdateDetail" component={UpdateDetail} />
         </>
       )}
     </Stack.Navigator>

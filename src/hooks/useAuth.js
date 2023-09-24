@@ -11,9 +11,10 @@ import {
   GoogleAuthProvider,
 } from 'firebase/auth/react-native';
 import { useEffect, useState, useContext, createContext } from 'react';
-import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore"; 
+import { doc, serverTimestamp, setDoc } from "firebase/firestore"; 
 import { db } from '../../firebase';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { updateUser, saveUser } from '../components/User';
 
 const authContext = createContext();
 
@@ -40,16 +41,23 @@ const useProvideAuth = () => {
 
       const { idToken } = await GoogleSignin.signIn();
       const credential = GoogleAuthProvider.credential(idToken);
-      const user = await signInWithCredential(credential);
-      setUser(user)
+      const { user } = await signInWithCredential(auth, credential);
 
-      setDoc(doc(db, "users", auth.currentUser.uid), {
-        userName: displayName,
-        userEmail: email,
-        createdAt: serverTimestamp(),
-        userImg: null,
+      setUser(user)
+      
+      const updateStatus = await updateUser (user.uid, {
+        updatedAt: serverTimestamp(),
       });
 
+      if (updateStatus.error) {
+        await saveUser (user.uid, {
+          userName: user.displayName,
+          userEmail: user.email,
+          createdAt: serverTimestamp(),
+          userImg: user.photoURL,
+        })
+      }
+    
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -77,6 +85,7 @@ const useProvideAuth = () => {
     try {
       setLoading(true);
 
+      await GoogleSignin.signOut();
       await signOut(auth);
       setUser(null);
     } catch (error) {
@@ -99,7 +108,7 @@ const useProvideAuth = () => {
       setUser(credential.user);
       
 
-      setDoc(doc(db, "users", auth.currentUser.uid), {
+      await setDoc(doc(db, "users", auth.currentUser.uid), {
         userName: displayName,
         userEmail: email,
         createdAt: serverTimestamp(),
@@ -108,7 +117,7 @@ const useProvideAuth = () => {
 
       } catch (error) {
       setLoading(false);
-
+      console.log(error);
       return { error };
     }
   };

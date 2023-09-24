@@ -17,7 +17,7 @@ import {
     },
     {
       title: 'Digital Talent',
-      to: '',
+      to: 'AddTalent',
       icon: 'account-network',
     },
   ];

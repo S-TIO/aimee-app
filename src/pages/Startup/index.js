@@ -1,18 +1,14 @@
 import {
   setStatusBarBackgroundColor,
   setStatusBarStyle,
-  StatusBar
 } from 'expo-status-bar';
-import { useNavigation } from "@react-navigation/native";
 
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from '../../../firebase';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, TouchableOpacity, Text, FlatList, Pressable, Image } from 'react-native';
-import { useTheme, TextInput, Appbar, AppbarAction } from 'react-native-paper';
-import STARTUP from '../../_DATA/startup.json';
+import { StyleSheet, View, Text, FlatList, Pressable, Image } from 'react-native';
+import { useTheme, TextInput, Appbar } from 'react-native-paper';
 import Container from '../../layout/Container';
-import StartupList from '../../views/Startup/StartupList';
 
 
 const Search = () => {
@@ -145,29 +141,6 @@ const Startup = ({ navigation }) => {
 					keyExtractor={(item) => item.id}
 				/>
       </View>
-
-      {/* <View style={styles.lockedButtonContainer}>
-        <TouchableOpacity
-          style={styles.lockedButton}
-          onPress={() =>
-            navigation.navigate('AddStartup')}
-              activeOpacity={0.6}
-        >
-          <Text
-            style={[
-              styles.addStartupButtonText,
-              {
-                color: 'white',
-              },
-            ]}
-          >
-            Add Startup
-          </Text>
-        </TouchableOpacity>
-      </View> */}
-
-      {/* Status bar */}
-      <StatusBar style="auto" />
     </>
   );
 };

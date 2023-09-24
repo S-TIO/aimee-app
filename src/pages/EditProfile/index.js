@@ -14,34 +14,37 @@ import { useTheme } from 'react-native-paper';
 import { MaterialIcons } from "@expo/vector-icons";
 import {  db, fbStorage  } from "../../../firebase"
 import { useAuth } from '../../hooks/useAuth';
-import { doc, getDoc, updateDoc,
-  ref,
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import {ref,
   uploadBytesResumable,
-  getDownloadURL, } from "firebase/firestore";
-import { any } from "prop-types";
+  getDownloadURL } from "firebase/storage";
 
 
 const EditProfile = ({ navigation }) => {
   const { colors } = useTheme();
   const [selectedImage, setSelectedImage] = useState("");
   const [userData, setUserData] = useState(null);
+  const [image, setImage] = useState("");
 
-  const auth = useAuth();
-  const {user, logout} = useAuth();
+  const {user} = useAuth();
 
   const handleUpdate = async () => {
     const userRef = doc(db, "users", user.uid);
-  
+
     try {
+      if( image == null && userData.userImg ) {
+        image = userData.userImg;
+      };
+      
       await updateDoc(userRef, {
         userName: userData.userName,
         userEmail: userData.userEmail,
         phone: userData.phone,
         country: userData.country,
         city: userData.city,
-        userImg: userData.userImg,
+        userImg: image,
       });
-      
+      console.log(image)
       console.log('User Updated!');
       window.alert('Profile Updated!\nYour profile has been updated successfully.');
     } catch (error) {
@@ -80,11 +83,11 @@ const EditProfile = ({ navigation }) => {
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
-      await uploadToFirebase(result.assets[0].uri, "image");
+      await uploadToFirebase(result.assets[0].uri);
     }
   };
 
-  async function uploadToFirebase (uri, fileType) {
+  async function uploadToFirebase (uri) {
     const fetchResponse = await fetch(uri);
     const theBlob = await fetchResponse.blob();
   
@@ -97,31 +100,34 @@ const EditProfile = ({ navigation }) => {
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is" + progress + "% done")
+        console.log("Upload is " + progress + "% done");
       },
       (error) => {
         // Handle unsuccessful uploads
+        console.log(error);
       },
       () => {
       getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-        console.log("File available at", downloadURL);
-        await updateImage(downloadURL);
-        setImage ("");
+        setImage (downloadURL);
+        window.alert("Upload completed successfully!");
       });
       }
     );
   };
 
-  async function updateImage() {
-    try {
-      const docRef = await updateDoc(doc(db, "users", user.uid), {
-        userImg,
-      })
-      console.log("Update Success", docRef.id);
-    } catch (e) {
-      console.log(e)
-    }
-  }
+  // async function updateImage() {
+  //   const userImg = user.userImg;
+  //   try {
+  //     const docRef = await updateDoc(doc(db, "users", user.uid), {
+  //       userImg,
+  //     })
+  //     console.log("Update Success", docRef.id);
+  //     console.log(user)
+  //   } catch (error) {
+  //     console.log(user)
+  //     console.log(error)
+  //   }
+  // }
 
   useEffect(() => {
     getUser();
@@ -168,12 +174,10 @@ const EditProfile = ({ navigation }) => {
         >
           <TouchableOpacity onPress={handleImageSelection}>
             <Image
-              source={{ uri: selectedImage
-                ? selectedImage
-                : userData
+              source={{ uri: userData
                 ? userData.userImg ||
-                  'https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg'
-                : 'https://lh5.googleusercontent.com/-b0PKyNuQv5s/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclxAM4M1SCBGAO7Rp-QP6zgBEUkOQ/s96-c/photo.jpg',
+                  'https://firebasestorage.googleapis.com/v0/b/aimee-6d10e.appspot.com/o/default%2FDesain%20tanpa%20judul%20(5).png?alt=media&token=9b9a50d3-6c63-465c-9372-6dfe5c0cb48f'
+                : 'https://firebasestorage.googleapis.com/v0/b/aimee-6d10e.appspot.com/o/default%2FDesain%20tanpa%20judul%20(5).png?alt=media&token=9b9a50d3-6c63-465c-9372-6dfe5c0cb48f',
             }}
               style={{
                 height: 170,

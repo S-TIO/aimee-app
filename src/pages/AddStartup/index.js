@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import {
     StyleSheet,
     Keyboard,
@@ -6,15 +6,21 @@ import {
 import { ScrollView } from 'react-native-gesture-handler';
 import { TextInput, Button, useTheme, Appbar } from 'react-native-paper';
 import { collection, addDoc } from "firebase/firestore"; 
-import { db } from '../../../firebase';
+import { db, fbStorage } from '../../../firebase';
 import Container from '../../layout/Container';
 import DropDown from "react-native-paper-dropdown";
+import * as ImagePicker from "expo-image-picker";
+import {ref,
+  uploadBytesResumable,
+  getDownloadURL } from "firebase/storage";
 
 const AddStartup = ({ navigation }) => {
   const { colors } = useTheme();
+  const [selectedImage, setSelectedImage] = useState("");
   const [showDropDown1, setShowDropDown1] = useState(false);
   const [showDropDown2, setShowDropDown2] = useState(false);
   const [showDropDown3, setShowDropDown3] = useState(false);
+  const [showDropDown4, setShowDropDown4] = useState(false);
   const [sektorIndustri, setSektorIndustri] = useState (null);
   const [tahapPerkembangan, setTahapPerkembangan] = useState(null);
   const [modelBisnis, setModelBisnis] = useState(null);
@@ -45,11 +51,20 @@ const AddStartup = ({ navigation }) => {
     {label: 'Direct-to-Consumer', value: 'Direct-to-Consumer'},
     {label: 'Franchise', value: 'Franchise'}
   ];
+  const keahlianList = [
+    {label: 'Teknologi dan Pengembangan Produk', value: 'Teknologi dan Pengembangan Produk'},
+    {label: 'Pemasaran dan Strategi Penjualan', value: 'Pemasaran dan Strategi Penjualan'},
+    {label: 'Manajemen Operasional dan Skalabilitas', value: 'Manajemen Operasional dan Skalabilitas'},
+    {label: 'Kemitraan dan Pengembangan Bisnis', value: 'Kemitraan dan Pengembangan Bisnis'},
+    {label: 'Keuangan dan Akuntansi', value: 'Keuangan dan Akuntansi'},
+    {label: 'Hukum dan Regulasi', value: 'Hukum dan Regulasi'}
+  ];
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
   const [image, setImage] = useState('');
   const [ukuranTim, setUkuranTim] = useState('');
+  const [keahlian, setKeahlian] = useState('');
   const [pendanaan, setPendanaan] = useState('');
   const [contact, setContact] = useState('');
 
@@ -60,9 +75,10 @@ const AddStartup = ({ navigation }) => {
       location: location,
       sektorIndustri : sektorIndustri,
       tahapPerkembangan : tahapPerkembangan,
-      ukuranTim : Number(ukuranTim),
+      ukuranTim : ukuranTim,
       modelBisnis : modelBisnis,
-      pendanaan : Number(pendanaan),
+      keahlian : keahlian,
+      pendanaan : pendanaan,
       image : image,
       contact : contact
     }).then(() => {
@@ -73,15 +89,63 @@ const AddStartup = ({ navigation }) => {
       setTahapPerkembangan('');
       setUkuranTim('');
       setModelBisnis('');
+      setKeahlian('');
       setPendanaan('');
       setImage('');
       setContact('');
       Keyboard.dismiss;
       console.log('Data Submitted');
+      window.alert("Data Submitted Successfully!");
     }).catch((error) => {
+      window.alert('Error submitting your data. Please try again.');
       console.log(error);
     });
   }
+
+  const handleImageSelection = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+      await uploadToFirebase(result.assets[0].uri);
+    }
+  };
+
+  async function uploadToFirebase (uri) {
+    const fetchResponse = await fetch(uri);
+    const theBlob = await fetchResponse.blob();
+  
+    const imageRef = ref(fbStorage, `logos/` + new Date().getTime());
+  
+    const uploadTask = uploadBytesResumable(imageRef, theBlob);
+  
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+        console.log(error);
+      },
+      () => {
+      getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+        console.log("File available at", downloadURL);
+        setImage (downloadURL);
+        window.alert("Upload completed successfully!");
+      });
+      }
+    );
+  };
 
   return (
     <>
@@ -140,6 +204,7 @@ const AddStartup = ({ navigation }) => {
           <TextInput
             label="Team Size"
             placeholder='10'
+            keyboardType="numeric"
             value={ukuranTim}
             onChangeText={setUkuranTim}
             mode="outlined"
@@ -157,16 +222,20 @@ const AddStartup = ({ navigation }) => {
           <TextInput
             label="Dana yang Dibutuhkan"
             placeholder='20000000'
+            keyboardType="numeric"
             value={pendanaan}
             onChangeText={setPendanaan}
             mode="outlined"
           />
-          <TextInput
-            label="Startup Logo"
-            placeholder='image url'
-            value={image}
-            onChangeText={setImage}
-            mode="outlined"
+          <DropDown
+            label={"Keahlian yang Dibutuhkan"}
+            mode={"outlined"}
+            visible={showDropDown4}
+            showDropDown={() => setShowDropDown4(true)}
+            onDismiss={() => setShowDropDown4(false)}
+            value={keahlian}
+            setValue={setKeahlian}
+            list={keahlianList}
           />
           <TextInput
             label="Contact"
@@ -175,7 +244,13 @@ const AddStartup = ({ navigation }) => {
             onChangeText={setContact}
             mode="outlined"
           />
-
+          <Button
+            onPress={handleImageSelection}
+            mode="contained"
+            style={styles.loginButton}
+          >
+            Upload Logo
+          </Button>
           <Button
             onPress={create}
             mode="contained"

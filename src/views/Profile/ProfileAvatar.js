@@ -3,11 +3,12 @@ import { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Avatar, Text, useTheme } from 'react-native-paper';
 
+
 const ProfileAvatar = ({ name, avatar, status }) => {
   const { colors } = useTheme();
-
   const [loadImageError, setLoadImageError] = useState(false);
 
+  
   return (
     <View style={styles.container}>
       {loadImageError && <Avatar.Text label={name[0]} size={64} />}

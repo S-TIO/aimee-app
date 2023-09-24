@@ -38,6 +38,7 @@ export default function StartupDetails({ route, navigation }) {
 							styles.image,
 							{
 								backgroundColor: colors.surface,
+								marginTop: 10,
 							},
 							]}
 						/>
@@ -67,6 +68,8 @@ export default function StartupDetails({ route, navigation }) {
 					<Text>{data.modelBisnis}</Text>
 					<Text style={styles.title}>Growth Stage</Text>
 					<Text>{data.tahapPerkembangan}</Text>
+					<Text style={styles.title}>Required Talent</Text>
+					<Text>{data.keahlian}</Text>
 					<Text style={styles.title}>Required Funding</Text>
 					<Text>{data.pendanaan}</Text>
 					<Text style={styles.title}>Contact</Text>
@@ -76,15 +79,15 @@ export default function StartupDetails({ route, navigation }) {
 				<View style={styles.icons}>
 					<Pressable
 						onPress={() =>
-							navigation.navigate("Updatefirestore", {
+							navigation.navigate("UpdateDetail", {
 								item: data,
 							})
 						}
 					>
-						<MaterialIcons name="edit" size={24} color="#0000FF" />
+						<MaterialIcons name="edit" size={40} color="#0000FF" />
 					</Pressable>
 					<Pressable onPress={onDelete}>
-						<MaterialIcons name="delete" size={24} color="#FF6768" />
+						<MaterialIcons name="delete" size={40} color="#FF6768" />
 					</Pressable>
 				</View>
 			</ScrollView>
@@ -94,15 +97,14 @@ export default function StartupDetails({ route, navigation }) {
 
 const styles = StyleSheet.create({
 	Container: {
-		margin: 15,
-		padding: 15,
-		borderRadius: 15,
+		marginHorizontal: 15,
 	},
 	uppercontainer: {
 		alignItems: "center",
 	},
 	bottomcontainer: {
 		alignItems: "flex-start",
+		paddingBottom: 5,
 	},
 	uppertext: {
 		alignItems: "center",
@@ -126,6 +128,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		paddingTop: 20,
 		alignSelf: "flex-end",
+		marginBottom: 20,
 	},
 	image: {
 		height: 120,
