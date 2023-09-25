@@ -3,21 +3,18 @@ import {
     setStatusBarStyle,
     StatusBar
   } from 'expo-status-bar';
-  import { useNavigation } from "@react-navigation/native";
   
-  import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+  import { collection, onSnapshot, query, orderBy, getDocs } from "firebase/firestore";
   import { db } from '../../../firebase';
   import React, { useEffect, useState } from 'react';
   import { ScrollView, StyleSheet, View, TouchableOpacity, Text, FlatList, Pressable, Image } from 'react-native';
   import { useTheme, TextInput, Appbar, AppbarAction } from 'react-native-paper';
-  import STARTUP from '../../_DATA/startup.json';
-  import Container from '../../layout/Container';
-  import StartupList from '../../views/Startup/StartupList';
-  
+  import { useAuth } from '../../hooks/useAuth';
   
   const StartupMatch = ({ navigation }) => {
     const { colors } = useTheme();
-      const [startuplist, setStartupList] = useState([]);
+    const [startuplist, setStartupList] = useState([]);
+    const { user } = useAuth();
   
       
   
@@ -30,20 +27,20 @@ import {
       return unsubscribe;
     }, [navigation]);
   
+    const getUser = async () => {
+      try {
+        const userRef = collection(db, 'users', user.uid, 'matched');
+        const querySnapshot = await getDocs(userRef);
+        setStartupList(
+          querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        );
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
     useEffect(() => {
-          const dbRef = collection(db, "StartupList");
-  
-          const q = query(dbRef, orderBy("name", "asc"));
-  
-          const unsubscribe = onSnapshot(q, (querySnapshot) => {
-              setStartupList(
-                  querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-              );
-          });
-  
-          return unsubscribe;
-      }, []);
-  
+      getUser();
+    }, []);
     return (
       <>
         <Appbar.Header
@@ -53,10 +50,10 @@ import {
         >
           <Appbar.BackAction
             onPress={() => {
-              navigation.goBack();
+              navigation.navigate('Profile');
             }}
           />
-          <Appbar.Content title="Startup" />
+          <Appbar.Content title="My Startup Match" />
         </Appbar.Header>
   
         <View
@@ -64,29 +61,29 @@ import {
           contentContainerStyle={styles.scrolViewContent}
         >
           <FlatList
-                      style={{ height: "100%" }}
-                      data={startuplist}
-                      numColumns={1}
-                      renderItem={({ item }) => (
-                          <Pressable
-                              onPress={() =>
-                                  navigation.navigate("StartupDetails", {
-                                      data: item,
-                                  })
-                              }
-                              style={({ pressed }) => [
-                                  styles.button,
-                                  {
-                                      backgroundColor: pressed ? "#dfedfa" : "#fff",
-                                      opacity: pressed ? 0.5 : 1,
-                                      margin: 5,
-                                      padding: 0,
-                                      borderRadius: 10,
-                                      alignItems: "center",
-                                      elevation: 5,
-                                  },
-                              ]}
-                          >
+                style={{ height: "100%" }}
+                data={startuplist}
+                numColumns={1}
+                renderItem={({ item }) => (
+                <Pressable
+                    onPress={() =>
+                        navigation.navigate("StartupDetails", {
+                            data: item,
+                        })
+                    }
+                    style={({ pressed }) => [
+                        styles.button,
+                        {
+                            backgroundColor: pressed ? "#dfedfa" : "#fff",
+                            opacity: pressed ? 0.5 : 1,
+                            margin: 5,
+                            padding: 0,
+                            borderRadius: 10,
+                            alignItems: "center",
+                            elevation: 5,
+                        },
+                    ]}
+                >
                   <View style={styles.container}>
                   <View>
                     <Image
@@ -116,33 +113,11 @@ import {
                     </View>
                   </View>
                 </View>
-                          </Pressable>
-                      )}
-                      keyExtractor={(item) => item.id}
-                  />
+              </Pressable>
+          )}
+          keyExtractor={(item) => item.id}
+      />
         </View>
-  
-        {/* <View style={styles.lockedButtonContainer}>
-          <TouchableOpacity
-            style={styles.lockedButton}
-            onPress={() =>
-              navigation.navigate('AddStartup')}
-                activeOpacity={0.6}
-          >
-            <Text
-              style={[
-                styles.addStartupButtonText,
-                {
-                  color: 'white',
-                },
-              ]}
-            >
-              Add Startup
-            </Text>
-          </TouchableOpacity>
-        </View> */}
-  
-        {/* Status bar */}
         <StatusBar style="auto" />
       </>
     );

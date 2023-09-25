@@ -10,7 +10,7 @@ import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { COLORS, FONTS } from "../../constants";
-import { useTheme } from 'react-native-paper';
+import { Appbar, useTheme } from 'react-native-paper';
 import { MaterialIcons } from "@expo/vector-icons";
 import {  db, fbStorage  } from "../../../firebase"
 import { useAuth } from '../../hooks/useAuth';
@@ -112,42 +112,30 @@ const EditProfile = ({ navigation }) => {
   }, []);
 
   return (
-    <SafeAreaView
+    <>
+    <Appbar.Header
+          style={{
+            backgroundColor: colors.surface,
+          }}
+        >
+          <Appbar.BackAction
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+          <Appbar.Content title="Edit Profile" />
+      </Appbar.Header>
+    <View
       style={{
         flex: 1,
         backgroundColor: COLORS.white,
         paddingHorizontal: 22,
       }}
     >
-      <View
-        style={{
-          marginHorizontal: 12,
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{
-            position: "absolute",
-            left: 0,
-          }}
-        >
-          <MaterialIcons
-            name="keyboard-arrow-left"
-            size={24}
-            color={COLORS.black}
-          />
-        </TouchableOpacity>
-
-        <Text style={{ ...FONTS.h3 }}>Edit Profile</Text>
-      </View>
-
       <ScrollView>
         <View
           style={{
             alignItems: "center",
-            marginVertical: 22,
           }}
         >
           <TouchableOpacity onPress={handleImageSelection}>
@@ -351,7 +339,8 @@ const EditProfile = ({ navigation }) => {
         </TouchableOpacity>
 
       </ScrollView>
-    </SafeAreaView>
+    </View>
+    </>
   );
 };
 

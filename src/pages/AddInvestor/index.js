@@ -157,6 +157,7 @@ const AddInvestor = ({ navigation }) => {
                 matchPendanaan: pendanaan,
                 matchTahapPerkembangan: tahapPerkembangan,
                 matchContact: contact,
+                matchId: user.uid
               });
             }}
             mode="contained"

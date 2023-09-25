@@ -13,7 +13,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { useAuth } from '../../hooks/useAuth';
 
 
-const MatchingPage = ({ route }) => {
+const MatchingPage = ({ route, navigation }) => {
   const {
     matchName,
     matchSektorIndustri,
@@ -21,32 +21,33 @@ const MatchingPage = ({ route }) => {
     matchTahapPerkembangan,
     matchModelBisnis,
     matchContact,
+    matchId,
   } = route.params;
   const { colors } = useTheme();
   const [startup, setStartup] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const swipeRef = useRef(null);
-  const { user } = useAuth();
 
   useEffect(() => {
     let unsub;
     const fetchCards = async () => {
-      const matches = await getDocs(
-        collection(db, "users", user.id, "match")
+      const matched = await getDocs(
+        collection(db, "users", matchId, "match")
       ).then((snapshot) => snapshot.docs.map((doc) => doc.id));
 
       const skipped = await getDocs(
-        collection(db, "users", user.id, "skipped")
+        collection(db, "users", matchId, "skipped")
       ).then((snapshot) => snapshot.docs.map((doc) => doc.id));
 
-      const matchedIds = matches.length > 0 ? matches : ["test"];
+      const matchedIds = matched.length > 0 ? matched : ["test"];
       const skippedIds = skipped.length > 0 ? skipped : ["test"];
 
       console.log([...matchedIds, ...skippedIds]);
 
       unsub = onSnapshot(
-        query(
-          collection(db, "StartupList"),
+        query(query(
+          collection(db, "StartupList")),
+          where("id", "not-in", [...matchedIds, ...skippedIds]),
           where('sektorIndustri', '==', matchSektorIndustri),
           where('modelBisnis', '==', matchModelBisnis),
         ),
@@ -57,6 +58,7 @@ const MatchingPage = ({ route }) => {
           } else {
           setStartup(
             snapshot.docs
+              .filter((doc) => doc.id !== matchId)
               .map((doc) => ({
                 id: doc.id,
                 ...doc.data(),
@@ -74,9 +76,19 @@ const MatchingPage = ({ route }) => {
     if(!startup[index]) return;
 
     const userSkipped = startup[index]
-    console.log(`${user.name} passed Left on ${userSkipped.name}`);
+    console.log(`${matchName} skipped on ${userSkipped.name}`);
 
-    setDoc(doc(db, 'users', user.id, "skipped", userSkipped.id), userSkipped)
+    setDoc(doc(db, 'users', matchId, "skipped", userSkipped.id), userSkipped)
+
+  }
+
+  const swipeRightHandler = async (index) => {
+    if(!startup[index]) return;
+
+    const userMatched = startup[index]
+    console.log(`${matchName} matched with ${userMatched.name}`);
+
+    setDoc(doc(db, 'users', matchId, "matched", userMatched.id), userMatched)
 
   }
 
@@ -124,12 +136,13 @@ const MatchingPage = ({ route }) => {
             cardIndex={0}
             animateCardOpacity
             verticalSwipe={false}
-            onSwipedLeft={() => {
+            onSwipedLeft={(index) => {
               console.log("Skip")
               swipeLeftHandler(index)
             }}
-            onSwipedRight={()=> {
+            onSwipedRight={(index)=> {
               console.log("Yeah")
+              swipeRightHandler(index)
             }}
             />
           )}

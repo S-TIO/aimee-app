@@ -56,7 +56,7 @@ const Profile = ({ navigation }) => {
         <Container mt={16}>
           <ProfileAvatar
             name={ userData.userName || auth.user.displayName || auth.user.email}
-            avatar={userData.userImg}
+            avatar={userData.userImg || 'https://firebasestorage.googleapis.com/v0/b/aimee-6d10e.appspot.com/o/default%2FDesain%20tanpa%20judul%20(5).png?alt=media&token=9b9a50d3-6c63-465c-9372-6dfe5c0cb48f'} 
             status="Anggota AIMEE"
           />
           <Divider line />
@@ -67,7 +67,8 @@ const Profile = ({ navigation }) => {
         </Container>
         <MenuList text="Profile Settings" icon="account-outline" onPress={() =>
             navigation.navigate('EditProfile')}/>
-        <MenuList text="Change Password" icon="lock-outline" />
+        <MenuList text="Change Password" icon="lock-outline" onPress={() =>
+            navigation.navigate('ChangePassword')}/>
         <MenuList text="My Startup Match" icon="puzzle-check-outline" onPress={() =>
             navigation.navigate('StartupMatch')}/>
         {/* <MenuList
@@ -84,12 +85,14 @@ const Profile = ({ navigation }) => {
         <Container mb={8}>
           <Text style={styles.sectionHeader}>General</Text>
         </Container>
+        <MenuList text="Dashboard Tableau" icon="chart-box-outline" />
         <MenuList text="Help Center" icon="help-circle-outline" onPress={() => Linking.openURL('mailto:aimee@alphabetincubator.id')}/>
-        <MenuList text="About App" icon="alert-circle-outline" />
+        <MenuList text="About App" icon="alert-circle-outline" onPress={() =>
+            navigation.navigate('AboutApp')}/>
         <MenuList
           text="Rate AIMEE App"
           icon="star-outline"
-          info={<Text style={{ color: colors.disabled }}>v 1.0.0</Text>}
+          info={<Text style={{ color: colors.disabled }}>v 2.0.0</Text>}
           onPress={() => Linking.openURL('https://play.google.com/store/apps/details?id=com.aimee')}
         />
 

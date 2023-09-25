@@ -168,6 +168,7 @@ const AddTalent = ({ navigation }) => {
                 matchModelBisnis: modelBisnis,
                 matchTahapPerkembangan: tahapPerkembangan,
                 matchContact: contact,
+                matchId: user.uid
               });
             }}
             mode="contained"

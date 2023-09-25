@@ -241,6 +241,7 @@ export default function UpdateDetail({ route, navigation }) {
               <Button
                 onPress={onUpdate}
                 mode="contained"
+                style={styles.loginButton}
               >
                 Update Data
               </Button>
