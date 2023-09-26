@@ -119,6 +119,26 @@ const Login = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </Container>
+
+        <Container mt={5}>
+          <View style={styles.registerButton}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ForgotPassword')}
+              activeOpacity={0.6}
+            >
+              <Text
+                style={[
+                  styles.registerButtonText,
+                  {
+                    color: "red",
+                  },
+                ]}
+              >
+                Forgot Password?
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Container>
       </ScrollView>
 
       {auth.loading && <Spinner visible />}

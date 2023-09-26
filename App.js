@@ -38,6 +38,7 @@ import EditProfile from './src/pages/EditProfile';
 import StartupMatch from './src/pages/StartupMatch';
 import UpdateDetail from './src/pages/UpdateStartupDetail';
 import ChangePassword from './src/pages/ChangePassword';
+import ForgotPassword from './src/pages/ForgotPassword';
 import Profile from './src/pages/Profile';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import AboutApp from './src/pages/AboutApp';
@@ -71,6 +72,7 @@ const StackNavigation = () => {
         <>
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         </>
       )}
 

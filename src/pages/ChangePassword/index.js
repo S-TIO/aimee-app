@@ -5,20 +5,16 @@ import {
   import { useEffect, useState } from 'react';
   import {
     StyleSheet,
-    TouchableOpacity,
-    View,
-    Text,
-    Image,
     ToastAndroid,
   } from 'react-native';
   import { ScrollView } from 'react-native-gesture-handler';
   import Spinner from 'react-native-loading-spinner-overlay/lib';
-  import { TextInput, Button, useTheme, Colors, Appbar } from 'react-native-paper';
+  import { TextInput, Button, useTheme, Appbar } from 'react-native-paper';
   
   import SafeAreaView from '../../components/SafeAreaView';
   import { useAuth } from '../../hooks/useAuth';
   import Container from '../../layout/Container';
-import { EmailAuthCredential, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth/react-native';
+import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth/react-native';
   
   const ChangePassword = ({ navigation }) => {
     const { colors } = useTheme();

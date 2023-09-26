@@ -15,6 +15,7 @@ import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from '../../firebase';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { updateUser, saveUser } from '../components/User';
+import { sendPasswordResetEmail } from 'firebase/auth';
 
 const authContext = createContext();
 
@@ -136,6 +137,17 @@ const useProvideAuth = () => {
     }
   };
 
+  const forgotPassword = async (email) => {
+    try {
+      setLoading(true)
+    await sendPasswordResetEmail(auth, email);
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+        console.log(error)
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((state) => {
       if (state) {
@@ -152,7 +164,7 @@ const useProvideAuth = () => {
     return () => unsubscribe();
   }, []);
 
-  return { user, loading, initialized, login, logout, register, signIn };
+  return { user, loading, initialized, login, logout, register, signIn, forgotPassword };
 };
 
 export { ProvideAuth, useAuth };
