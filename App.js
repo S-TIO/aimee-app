@@ -17,6 +17,7 @@ import { ProvideAuth, useAuth } from './src/hooks/useAuth';
 import AllClass from './src/pages/AllClass';
 import AllSeminar from './src/pages/AllSeminar';
 import AllSharing from './src/pages/AllSharing';
+import AllBlogNews from './src/pages/AllBlogNews';
 import Home from './src/pages/Home';
 import Loading from './src/pages/Loading';
 import Login from './src/pages/Login';
@@ -40,6 +41,7 @@ import ChangePassword from './src/pages/ChangePassword';
 import Profile from './src/pages/Profile';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import AboutApp from './src/pages/AboutApp';
+import Dashboard from './src/pages/DashboardTableau';
 
 GoogleSignin.configure({
   webClientId:
@@ -79,6 +81,7 @@ const StackNavigation = () => {
           <Stack.Screen name="AllSeminar" component={AllSeminar} />
           <Stack.Screen name="AllSharing" component={AllSharing} />
           <Stack.Screen name="AllClass" component={AllClass} />
+          <Stack.Screen name="AllBlogNews" component={AllBlogNews} />
           <Stack.Screen name="Mentor" component={Mentor} />
           <Stack.Screen name="Matchmaking" component={Matchmaking} />
           <Stack.Screen name="Startup" component={Startup} />
@@ -96,6 +99,7 @@ const StackNavigation = () => {
           <Stack.Screen name="ChangePassword" component={ChangePassword} />
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="AboutApp" component={AboutApp} />
+          <Stack.Screen name="Dashboard" component={Dashboard} />
         </>
       )}
     </Stack.Navigator>

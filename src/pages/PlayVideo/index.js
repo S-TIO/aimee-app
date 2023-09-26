@@ -15,21 +15,8 @@ import DescriptionSheet from '../../views/PlayVideo/DescriptionSheet';
 import RecommendedVideo from '../../views/PlayVideo/RecommendedVideo';
 import VideoContainer from '../../views/PlayVideo/VideoContainer';
 import VideoDescription from '../../views/PlayVideo/VideoDescription';
-
-const createVid = (id, title, description) => {
-  return {
-    id,
-    title,
-    cover: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
-    link: `https://www.youtube.com/embed/${id}?rel=0&autoplay=0&showinfo=0&controls=1&fullscreen=1`,
-    description,
-    type: 'VIDEO',
-  };
-};
-
-const SHARINGSANTAII = sharingSantaii.map((vid) => {
-  return createVid(vid.id, vid.title, vid.description);
-});
+import { db } from '../../../firebase';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 const PlayVideo = ({ route, navigation }) => {
   const data = route.params.data;
@@ -44,6 +31,34 @@ const PlayVideo = ({ route, navigation }) => {
   const filterVideo = (videos) => {
     return videos.filter((vid) => vid.id !== data.id);
   };
+
+  const [sharingSantaii, setSharingSantaii] = useState([]);
+
+  const createVid = (id, title, description) => {
+    return {
+      id,
+      title,
+      cover: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
+      link: `https://www.youtube.com/embed/${id}?rel=0&autoplay=0&showinfo=0&controls=1&fullscreen=1`,
+      description,
+      type: 'VIDEO',
+    };
+  };
+
+  useEffect(() => {
+    const dbRef = collection(db, "SharingSantaii");
+  
+    const q = query(dbRef, orderBy("title", "asc"));
+  
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        setSharingSantaii(querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+    return unsubscribe;
+  }, []);
+
+  const SHARINGSANTAII = sharingSantaii?.map((doc) => {
+    return createVid(doc.id, doc.title, doc.description);
+  });
 
   useEffect(() => {
     if (videoLoaded) {

@@ -2,12 +2,11 @@ import {
   setStatusBarBackgroundColor,
   setStatusBarStyle,
 } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { View, StyleSheet, SectionList } from 'react-native';
 import { TextInput, useTheme } from 'react-native-paper';
 
 import posts from '../../_DATA/posts.json';
-import sharingSantaii from '../../_DATA/sharing-santaii.json';
 import Divider from '../../components/Divider';
 import HorizontalSection from '../../components/HorizontalSection';
 import SafeAreaView from '../../components/SafeAreaView';
@@ -15,17 +14,8 @@ import VerticalSection from '../../components/VerticalSection';
 import Container from '../../layout/Container';
 import BannerCarousel from '../../views/Home/BannerCarousel';
 import HorizontalMenu from '../../views/Home/HorizontalMenu';
-
-const createVid = (id, title, description) => {
-  return {
-    id,
-    title,
-    cover: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
-    link: `https://www.youtube.com/embed/${id}?rel=0&autoplay=0&showinfo=0&controls=1&fullscreen=1`,
-    description,
-    type: 'VIDEO',
-  };
-};
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { db } from '../../../firebase';
 
 const MENU = [
   {
@@ -98,42 +88,6 @@ const POSTS = posts.map((post) => {
   };
 });
 
-const SHARINGSANTAII = sharingSantaii.map((vid) => {
-  return createVid(vid.id, vid.title, vid.description);
-});
-
-const SECTIONS = [
-  {
-    title: 'TopBox',
-    data: [],
-  },
-  {
-    title: 'Search',
-    data: [],
-  },
-  {
-    title: 'Banner',
-    data: BANNER,
-  },
-  {
-    title: 'Menu',
-    data: MENU,
-  },
-  {
-    title: 'Divider',
-    data: [],
-  },
-  {
-    title: 'Recommended for You',
-    data: SHARINGSANTAII.slice(0, 5),
-    viewAll: 'AllSharing',
-  },
-  {
-    title: 'Blog and News',
-    data: POSTS,
-    viewAll: 'AllSeminar',
-  },
-];
 
 const TopBox = () => {
   const { colors } = useTheme();
@@ -182,6 +136,66 @@ const Search = () => {
 
 const Home = ({ navigation }) => {
   const { colors } = useTheme();
+  const [sharingSantaii, setSharingSantaii] = useState([]);
+
+  const createVid = (id, title, description) => {
+    return {
+      id,
+      title,
+      cover: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
+      link: `https://www.youtube.com/embed/${id}?rel=0&autoplay=0&showinfo=0&controls=1&fullscreen=1`,
+      description,
+      type: 'VIDEO',
+    };
+  };
+
+  useEffect(() => {
+    const dbRef = collection(db, "SharingSantaii");
+  
+    const q = query(dbRef, orderBy("title", "asc"));
+  
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        setSharingSantaii(querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+    return unsubscribe;
+  }, []);
+
+  const SHARINGSANTAII = sharingSantaii?.map((doc) => {
+    return createVid(doc.id, doc.title, doc.description);
+  });
+
+  const SECTIONS = [
+    {
+      title: 'TopBox',
+      data: [],
+    },
+    {
+      title: 'Search',
+      data: [],
+    },
+    {
+      title: 'Banner',
+      data: BANNER,
+    },
+    {
+      title: 'Menu',
+      data: MENU,
+    },
+    {
+      title: 'Divider',
+      data: [],
+    },
+    {
+      title: 'Recommended for You',
+      data: SHARINGSANTAII.slice(0, 5),
+      viewAll: 'AllSharing',
+    },
+    {
+      title: 'Blog and News',
+      data: POSTS,
+      viewAll: 'AllBlogNews',
+    },
+  ];
 
   const handleScroll = (e) => {
     if (e.nativeEvent.contentOffset.y < 36) {

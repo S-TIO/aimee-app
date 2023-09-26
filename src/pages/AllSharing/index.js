@@ -1,34 +1,46 @@
 import { SectionList, StyleSheet } from 'react-native';
 import { Appbar, useTheme } from 'react-native-paper';
-
-import sharingSantaii from '../../_DATA/sharing-santaii.json';
 import VerticalSection from '../../components/VerticalSection';
-
-const createVid = (id, title, description) => {
-  return {
-    id,
-    title,
-    cover: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
-    link: `https://www.youtube.com/embed/${id}?rel=0&autoplay=0&showinfo=0&controls=1&fullscreen=1`,
-    description,
-    type: 'VIDEO',
-  };
-};
-
-const SHARINGSANTAII = sharingSantaii.map((vid) => {
-  return createVid(vid.id, vid.title, vid.description);
-});
-
-const SECTIONS = [
-  {
-    title: '',
-    data: SHARINGSANTAII,
-  },
-];
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { db } from '../../../firebase';
 
 const AllSharing = ({ navigation }) => {
   const { colors } = useTheme();
+  const [sharingSantaii, setSharingSantaii] = useState([]);
 
+  const createVid = (id, title, description) => {
+    return {
+      id,
+      title,
+      cover: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
+      link: `https://www.youtube.com/embed/${id}?rel=0&autoplay=0&showinfo=0&controls=1&fullscreen=1`,
+      description,
+      type: 'VIDEO',
+    };
+  };
+
+  useEffect(() => {
+    const dbRef = collection(db, "SharingSantaii");
+  
+    const q = query(dbRef, orderBy("title", "asc"));
+  
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        setSharingSantaii(querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+    return unsubscribe;
+  }, []);
+
+  const SHARINGSANTAII = sharingSantaii?.map((doc) => {
+    return createVid(doc.id, doc.title, doc.description);
+  });
+
+  const SECTIONS = [
+    {
+      title: '',
+      data: SHARINGSANTAII,
+    },
+  ];
   return (
     <>
       <Appbar.Header

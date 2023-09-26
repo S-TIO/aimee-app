@@ -13,10 +13,11 @@ import * as ImagePicker from "expo-image-picker";
 import {ref,
   uploadBytesResumable,
   getDownloadURL } from "firebase/storage";
+import Spinner from 'react-native-loading-spinner-overlay/lib';
 
 const AddStartup = ({ navigation }) => {
   const { colors } = useTheme();
-  const [selectedImage, setSelectedImage] = useState("");
+  const [ loading, setLoading ] = useState(false);
   const [showDropDown1, setShowDropDown1] = useState(false);
   const [showDropDown2, setShowDropDown2] = useState(false);
   const [showDropDown3, setShowDropDown3] = useState(false);
@@ -85,6 +86,7 @@ const AddStartup = ({ navigation }) => {
   };
 
   function create () {
+    setLoading(true);
     addDoc(collectionRef, data)
   .then((docRef) => {
     const id = docRef.id;
@@ -104,6 +106,7 @@ const AddStartup = ({ navigation }) => {
       setContact('');
       Keyboard.dismiss;
       window.alert("Data Submitted Successfully!");
+      setLoading(false);
     }).catch((error) => {
       window.alert('Error submitting your data. Please try again.');
     });
@@ -119,7 +122,6 @@ const AddStartup = ({ navigation }) => {
 
 
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
       await uploadToFirebase(result.assets[0].uri);
     }
   };
@@ -138,6 +140,7 @@ const AddStartup = ({ navigation }) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log("Upload is " + progress + "% done");
+        setLoading(true);
       },
       (error) => {
         // Handle unsuccessful uploads
@@ -147,6 +150,7 @@ const AddStartup = ({ navigation }) => {
       getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
         setImage (downloadURL);
         window.alert("Upload completed successfully!");
+        setLoading(false);
       });
       }
     );
@@ -265,6 +269,7 @@ const AddStartup = ({ navigation }) => {
           </Button>
         </Container>
       </ScrollView>
+      {loading && <Spinner visible />}
     </>
   );
 };

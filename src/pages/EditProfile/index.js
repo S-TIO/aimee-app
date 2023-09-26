@@ -7,7 +7,6 @@ import {
   TextInput,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { COLORS, FONTS } from "../../constants";
 import { Appbar, useTheme } from 'react-native-paper';
@@ -18,22 +17,25 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import {ref,
   uploadBytesResumable,
   getDownloadURL } from "firebase/storage";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 
 const EditProfile = ({ navigation }) => {
   const { colors } = useTheme();
   const [selectedImage, setSelectedImage] = useState("");
   const [userData, setUserData] = useState(null);
-  const [image, setImage] = useState("");
-
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const {user} = useAuth();
 
   const handleUpdate = async () => {
     const userRef = doc(db, "users", user.uid);
 
     try {
-      if( image == null && userData.userImg ) {
-        image = userData.userImg;
+      setLoading(true);
+      let imgUrl = image;
+      if( imgUrl == null && userData.userImg ) {
+        imgUrl = userData.userImg;
       };
       
       await updateDoc(userRef, {
@@ -42,10 +44,14 @@ const EditProfile = ({ navigation }) => {
         phone: userData.phone,
         country: userData.country,
         city: userData.city,
-        userImg: image,
+        userImg: imgUrl,
       });
+      console.log(image)
       window.alert('Profile Updated!\nYour profile has been updated successfully.');
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+      console.log(error)
       window.alert('Error updating your profile. Please try again.');
     }
   };
@@ -74,7 +80,7 @@ const EditProfile = ({ navigation }) => {
     });
 
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
+      setSelectedImage(result.assets[0].uri)
       await uploadToFirebase(result.assets[0].uri);
     }
   };
@@ -93,6 +99,7 @@ const EditProfile = ({ navigation }) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log("Upload is " + progress + "% done");
+        setLoading(true);
       },
       (error) => {
         // Handle unsuccessful uploads
@@ -101,6 +108,7 @@ const EditProfile = ({ navigation }) => {
       () => {
       getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
         setImage (downloadURL);
+        setLoading(false);
         window.alert("Upload completed successfully!");
       });
       }
@@ -140,7 +148,8 @@ const EditProfile = ({ navigation }) => {
         >
           <TouchableOpacity onPress={handleImageSelection}>
             <Image
-              source={{ uri: userData
+              source={{ uri: selectedImage?selectedImage
+                : userData
                 ? userData.userImg ||
                   'https://firebasestorage.googleapis.com/v0/b/aimee-6d10e.appspot.com/o/default%2FDesain%20tanpa%20judul%20(5).png?alt=media&token=9b9a50d3-6c63-465c-9372-6dfe5c0cb48f'
                 : 'https://firebasestorage.googleapis.com/v0/b/aimee-6d10e.appspot.com/o/default%2FDesain%20tanpa%20judul%20(5).png?alt=media&token=9b9a50d3-6c63-465c-9372-6dfe5c0cb48f',
@@ -340,6 +349,7 @@ const EditProfile = ({ navigation }) => {
 
       </ScrollView>
     </View>
+    {loading && <Spinner visible />}
     </>
   );
 };

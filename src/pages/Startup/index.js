@@ -60,7 +60,6 @@ const Startup = ({ navigation }) => {
 
 		return unsubscribe;
 	}, []);
-
   return (
     <>
       <Appbar.Header

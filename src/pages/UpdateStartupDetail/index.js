@@ -10,6 +10,7 @@ import * as ImagePicker from "expo-image-picker";
 import {ref,
   uploadBytesResumable,
   getDownloadURL } from "firebase/storage";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 export default function UpdateDetail({ route, navigation }) {
     const { colors } = useTheme();
@@ -31,7 +32,7 @@ export default function UpdateDetail({ route, navigation }) {
     const [showDropDown2, setShowDropDown2] = useState(false);
     const [showDropDown3, setShowDropDown3] = useState(false);
     const [showDropDown4, setShowDropDown4] = useState(false);
-
+    const [loading, setLoading] = useState(false);
     const sektorIndustriList = [
         {label: 'Teknologi Informasi dan Komunikasi', value: 'Teknologi Informasi dan Komunikasi'},
         {label: 'Kesehatan dan Perawatan Kesehatan', value: 'Kesehatan dan Perawatan Kesehatan'},
@@ -96,6 +97,7 @@ export default function UpdateDetail({ route, navigation }) {
             const progress =
                 (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log("Upload is " + progress + "% done");
+            setLoading(true);
             },
             (error) => {
             // Handle unsuccessful uploads
@@ -105,6 +107,7 @@ export default function UpdateDetail({ route, navigation }) {
             getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
             setImage (downloadURL);
             window.alert("Upload completed successfully!");
+            setLoading(false);
             });
             }
         );
@@ -112,6 +115,7 @@ export default function UpdateDetail({ route, navigation }) {
 
 	const onUpdate = async () => {
 		try {
+      setLoading(true);
 			await updateDoc(doc(db, "StartupList", id), {
                 name: name,
                 description: description,
@@ -127,6 +131,7 @@ export default function UpdateDetail({ route, navigation }) {
                 updatedAt: new Date(),
             });
 			alert("Update Successful");
+      setLoading(false);
 		} catch (error) {
 			alert("Error Updating Data");
 		}
@@ -247,6 +252,7 @@ export default function UpdateDetail({ route, navigation }) {
               </Button>
             </Container>
           </ScrollView>
+          {loading && <Spinner visible />}
         </>
       );
 }

@@ -28,7 +28,6 @@ const Profile = ({ navigation }) => {
       const documentSnapshot = await getDoc(userRef);
   
       if (documentSnapshot.exists()) {
-        console.log('User Data', documentSnapshot.data());
         setUserData(documentSnapshot.data());
       }
     } catch (error) {
@@ -85,7 +84,8 @@ const Profile = ({ navigation }) => {
         <Container mb={8}>
           <Text style={styles.sectionHeader}>General</Text>
         </Container>
-        <MenuList text="Dashboard Tableau" icon="chart-box-outline" />
+        <MenuList text="Dashboard Tableau" icon="chart-box-outline" onPress={() =>
+            navigation.navigate('Dashboard')}/>
         <MenuList text="Help Center" icon="help-circle-outline" onPress={() => Linking.openURL('mailto:aimee@alphabetincubator.id')}/>
         <MenuList text="About App" icon="alert-circle-outline" onPress={() =>
             navigation.navigate('AboutApp')}/>
