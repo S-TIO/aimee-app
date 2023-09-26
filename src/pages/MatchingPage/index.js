@@ -7,10 +7,10 @@ import {
 import { Appbar, useTheme } from 'react-native-paper';
 import Swiper from 'react-native-deck-swiper';;
 import { db } from '../../../firebase';
-import { collection, doc, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
+import { collection, doc, getDocs, onSnapshot, query, setDoc, where } from 'firebase/firestore';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
-import { useAuth } from '../../hooks/useAuth';
+
 
 
 const MatchingPage = ({ route, navigation }) => {
@@ -41,8 +41,6 @@ const MatchingPage = ({ route, navigation }) => {
 
       const matchedIds = matched.length > 0 ? matched : ["test"];
       const skippedIds = skipped.length > 0 ? skipped : ["test"];
-
-      console.log([...matchedIds, ...skippedIds]);
 
       unsub = onSnapshot(
         query(query(
@@ -193,7 +191,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    marginTop: -50,
+    marginTop: -20,
+    marginBottom: -10,
   },
   flex: {
     flex: 1,

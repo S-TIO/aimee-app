@@ -50,7 +50,7 @@ import {
         >
           <Appbar.BackAction
             onPress={() => {
-              navigation.navigate('Profile');
+              navigation.navigate('Home');
             }}
           />
           <Appbar.Content title="My Startup Match" />
