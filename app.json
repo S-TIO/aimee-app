@@ -16,9 +16,7 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/eb23e5e0-f91d-45c7-9221-c2b8b06a784f"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.aimee",
@@ -31,9 +29,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "@react-native-google-signin/google-signin"
-    ],
+    "plugins": ["@react-native-google-signin/google-signin"],
     "extra": {
       "eas": {
         "projectId": "eb23e5e0-f91d-45c7-9221-c2b8b06a784f"
