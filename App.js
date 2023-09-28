@@ -36,6 +36,7 @@ import AddTalent from './src/pages/AddTalent';
 import MatchingPage from './src/pages/MatchingPage';
 import EditProfile from './src/pages/EditProfile';
 import StartupMatch from './src/pages/StartupMatch';
+import StartupMatchDetails from './src/pages/StartupMatchDetails';
 import UpdateDetail from './src/pages/UpdateStartupDetail';
 import ChangePassword from './src/pages/ChangePassword';
 import ForgotPassword from './src/pages/ForgotPassword';
@@ -97,6 +98,7 @@ const StackNavigation = () => {
           <Stack.Screen name="MatchingPage" component={MatchingPage} />
           <Stack.Screen name="EditProfile" component={EditProfile} />
           <Stack.Screen name="StartupMatch" component={StartupMatch} />
+          <Stack.Screen name="StartupMatchDetails" component={StartupMatchDetails} />
           <Stack.Screen name="UpdateDetail" component={UpdateDetail} />
           <Stack.Screen name="ChangePassword" component={ChangePassword} />
           <Stack.Screen name="Profile" component={Profile} />

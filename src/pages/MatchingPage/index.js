@@ -32,7 +32,7 @@ const MatchingPage = ({ route, navigation }) => {
     let unsub;
     const fetchCards = async () => {
       const matched = await getDocs(
-        collection(db, "users", matchId, "match")
+        collection(db, "users", matchId, "matched")
       ).then((snapshot) => snapshot.docs.map((doc) => doc.id));
 
       const skipped = await getDocs(

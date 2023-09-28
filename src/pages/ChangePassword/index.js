@@ -14,7 +14,7 @@ import {
   import SafeAreaView from '../../components/SafeAreaView';
   import { useAuth } from '../../hooks/useAuth';
   import Container from '../../layout/Container';
-import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth/react-native';
+  import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth/react-native';
   
   const ChangePassword = ({ navigation }) => {
     const { colors } = useTheme();
@@ -24,6 +24,7 @@ import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [newPassword2, setNewPassword2] = useState('');
+    const [loading, setLoading] = useState(false);
   
     useEffect(() => {
       const unsubscribe = navigation.addListener('focus', () => {
@@ -45,17 +46,21 @@ import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 
 
     const onChangePassword = async () => {
         try{
+            setLoading(true);
             await reauthenticate(currentPassword).then (() => {
                 updatePassword(user, newPassword).then (() => {
                     ToastAndroid.show(
                         `Pasword was changed`,
                         ToastAndroid.LONG
                         );
+                    setLoading(false);
                 }).catch((error) => { window.alert(error.message); });
             }).catch((error) => { ToastAndroid.show(
                 `Current password is wrong or invalid`,
                 ToastAndroid.LONG
-                );});
+                );
+                setLoading(false);
+              });
         } catch (error) {
             console.log(error)
         }
@@ -128,7 +133,7 @@ import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 
           </Container>
         </ScrollView>
   
-        {auth.loading && <Spinner visible />}
+        {loading && <Spinner visible />}
       </SafeAreaView>
       </>
     );

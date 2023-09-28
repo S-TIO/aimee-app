@@ -67,7 +67,7 @@ import {
                 renderItem={({ item }) => (
                 <Pressable
                     onPress={() =>
-                        navigation.navigate("StartupDetails", {
+                        navigation.navigate("StartupMatchDetails", {
                             data: item,
                         })
                     }

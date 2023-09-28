@@ -1,19 +1,11 @@
-import { View, Text, StyleSheet, Button, Pressable, Image } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { useTheme, Appbar } from 'react-native-paper';
-import { doc, deleteDoc } from "firebase/firestore";
-import { db } from "../../../firebase";
-import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import Container from "../../layout/Container";
 
-export default function StartupDetails({ route, navigation }) {
+export default function StartupMatchDetails({ route, navigation }) {
 	const { data } = route.params;
 	const { colors } = useTheme();
-	const onDelete = () => {
-		const docRef = doc(db, "StartupList", data.id);
-		deleteDoc(docRef);
-		navigation.goBack();
-	};
 
 	return (
 		<>
@@ -74,21 +66,6 @@ export default function StartupDetails({ route, navigation }) {
 					<Text>{data.pendanaan}</Text>
 					<Text style={styles.title}>Contact</Text>
 					<Text>{data.contact}</Text>
-				</View>
-
-				<View style={styles.icons}>
-					<Pressable
-						onPress={() =>
-							navigation.navigate("UpdateDetail", {
-								item: data,
-							})
-						}
-					>
-						<MaterialIcons name="edit" size={40} color="#0000FF" />
-					</Pressable>
-					<Pressable onPress={onDelete}>
-						<MaterialIcons name="delete" size={40} color="#FF6768" />
-					</Pressable>
 				</View>
 			</ScrollView>
 		</>
