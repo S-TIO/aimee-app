@@ -146,7 +146,7 @@ const Explore = ({ navigation }) => {
       title: 'Blog and News',
       horizontal: true,
       data: POSTS,
-      viewAll: 'AllSeminar',
+      viewAll: 'AllBlogNews',
     },
   ];
 

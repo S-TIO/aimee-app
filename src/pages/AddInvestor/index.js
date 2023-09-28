@@ -23,6 +23,7 @@ const AddInvestor = ({ navigation }) => {
   const sektorIndustriList = [
     {label: 'Teknologi Informasi dan Komunikasi', value: 'Teknologi Informasi dan Komunikasi'},
     {label: 'Kesehatan dan Perawatan Kesehatan', value: 'Kesehatan dan Perawatan Kesehatan'},
+    {label: 'Makanan dan Minuman', value: 'Makanan dan Minuman'},
     {label: 'E-commerce dan Retail', value: 'E-commerce dan Retail'},
     {label: 'Energi dan Lingkungan', value: 'Energi dan Lingkungan'},
     {label: 'Keuangan dan Fintech', value: 'Keuangan dan Fintech'},
