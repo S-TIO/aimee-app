@@ -9,7 +9,7 @@ const DescriptionSheet = ({ children, top, open, onClose }) => {
 
   const sheetRef = useRef(null);
 
-  const snapPoints = useMemo(() => ['100%', '100%'], []);
+  const snapPoints = useMemo(() => ['90%', '90%'], []);
 
   useEffect(() => {
     if (open) {
@@ -21,21 +21,17 @@ const DescriptionSheet = ({ children, top, open, onClose }) => {
 
   return (
     <>
-      <View style={[styles.container, { top: top + insets.top }]}>
-        <BottomSheet
-          ref={sheetRef}
-          snapPoints={snapPoints}
-          index={-1}
-          enablePanDownToClose
-          onClose={onClose}
-        >
-          <BottomSheetScrollView
-            contentContainerStyle={styles.contentContainer}
-          >
-            {children}
-          </BottomSheetScrollView>
-        </BottomSheet>
-      </View>
+      <BottomSheet
+        ref={sheetRef}
+        snapPoints={snapPoints}
+        index={-1}
+        enablePanDownToClose
+        onClose={onClose}
+      >
+        <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+          {children}
+        </BottomSheetScrollView>
+      </BottomSheet>
     </>
   );
 };
