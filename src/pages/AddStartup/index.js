@@ -144,7 +144,6 @@ const AddStartup = ({ navigation }) => {
         setLoading(true);
       },
       (error) => {
-        // Handle unsuccessful uploads
         console.log(error);
       },
       () => {
